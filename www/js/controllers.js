@@ -37,16 +37,12 @@ function NavigationController($scope, $location, OAuth) {
 
     $scope.scan = function () {
         scanQRCode(function (data) {
-            if(!OAuth.getEvent(data.server_url.hashCode(), data.event_id)) {
-                showAlert('No event', "There is no event in the list for this registrant", function () {});
-                $location.path('events');
-            } else {
-                $location.path('registrant').search({"registrant_id": data.registrant_id,
+            // removed the check for an existing event (UNOG Security use case)
+            $location.path('registrant').search({"registrant_id": data.registrant_id,
                                                  "event_id": data.event_id,
                                                  "server_id": data.server_url.hashCode(),
                                                  "checkin_secret": data.checkin_secret
                                              });
-            }
             $scope.$apply();
         });
     };
