@@ -29,7 +29,20 @@ function NavigationController($scope, $location, OAuth) {
                 showAlert("Error scanning", error, function () {});
             }
         );
-    }
+    };
+
+    function fetchTodaysEvents(server,success) {
+        OAuth.getTodaysEvents(server.baseUrl.hashCode(),function(events) {
+            for (var i=0; i<events.length; i++) {
+                var event = events[i];
+                event.server=server;
+                OAuth.addEvent(event, function () {
+                    console.log("Event "+event.id+" successfully added");
+                });
+            }
+            success();
+        });
+    };
 
     $scope.allEvents = function () {
         $location.path('events');
@@ -44,6 +57,17 @@ function NavigationController($scope, $location, OAuth) {
                                                  "checkin_secret": data.checkin_secret
                                              });
             $scope.$apply();
+        });
+    };
+
+    $scope.addServer = function () {
+        scanQRCode(function (data) {
+            OAuth.addServer(data, function () {
+                fetchTodaysEvents(data,function(){
+                    $location.path('events');
+                    $scope.$apply();
+                });  
+            });
         });
     };
 

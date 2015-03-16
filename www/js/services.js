@@ -200,6 +200,22 @@ angular.module('Checkinapp.services', []).
         );
     }
 
+    function getTodaysEvents(server_id, callback) {
+        getOAuthClient(server_id).getJSON(getServer(server_id).baseUrl +
+                      '/export/categ/0.json?from=today&to=today&detail=mobile',
+            function (data) {
+                callback(data.results);
+            },
+            function (data) {
+                checkOAuthError(data, function () {
+                    authenticate(server_id, function () {
+                        getTodaysEvents(server_id, callback);
+                    });
+                });
+            }
+        );
+    }
+
 
     function getRegistrant(server_id, event_id, registrant_id, callback) {
         getOAuthClient(server_id).getJSON(getServer(server_id).baseUrl +
@@ -265,6 +281,7 @@ angular.module('Checkinapp.services', []).
         getRegistrantsForEvent: getRegistrantsForEvent,
         getRegistrant: getRegistrant,
         checkIn: checkIn,
+        getTodaysEvents: getTodaysEvents,
         getUser: function () {
             return user;
         }
