@@ -22,8 +22,12 @@
         <footer class="navbar navbar-fixed-bottom checkin-nav" role="navigation">
             <nav class="nav navbar-nav">
                 <a ng-click="addServer()">
-                    <span class="glyphicon glyphicon-plus"></span>
+                    <span class="glyphicon glyphicon-qrcode"></span>
                     Add server
+                </a>
+                <a ng-click="fetchTodaysEvents()" ng-hide="server==undefined">
+                    <span class="glyphicon glyphicon-refresh"></span>
+                    Refresh
                 </a>
                 <a ng-click="allEvents()">
                     <span class="glyphicon glyphicon-list"></span>

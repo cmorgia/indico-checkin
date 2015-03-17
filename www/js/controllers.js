@@ -31,16 +31,17 @@ function NavigationController($scope, $location, OAuth) {
         );
     };
 
-    function fetchTodaysEvents(server,success) {
-        OAuth.getTodaysEvents(server.baseUrl.hashCode(),function(events) {
+    $scope.fetchTodaysEvents = function () {
+        OAuth.getTodaysEvents($scope.server.baseUrl.hashCode(),function(events) {
             for (var i=0; i<events.length; i++) {
                 var event = events[i];
-                event.server=server;
+                event.server=$scope.server;
                 OAuth.addEvent(event, function () {
                     console.log("Event "+event.id+" successfully added");
                 });
             }
-            success();
+            $location.path('events');
+            $scope.$apply();
         });
     };
 
@@ -63,10 +64,8 @@ function NavigationController($scope, $location, OAuth) {
     $scope.addServer = function () {
         scanQRCode(function (data) {
             OAuth.addServer(data, function () {
-                fetchTodaysEvents(data,function(){
-                    $location.path('events');
-                    $scope.$apply();
-                });  
+                $scope.server=data;
+                $scope.fetchTodaysEvents();  
             });
         });
     };
