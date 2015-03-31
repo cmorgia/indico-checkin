@@ -65,6 +65,7 @@ function NavigationController($scope, $location, OAuth) {
         scanQRCode(function (data) {
             OAuth.addServer(data, function () {
                 $scope.server=data;
+                $scope.simplifiedUI=true;
                 $scope.fetchTodaysEvents();  
             });
         });

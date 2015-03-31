@@ -14,7 +14,15 @@
             <table class="table table-condensed">
                 <tbody>
                     <tr ng-show="registrant.personal_data.picture">
-                        <img src="{{registrant.personal_data.picture}}">
+                        <td>
+                            <img src="{{registrant.personal_data.picture}}">
+                        </td>
+                        <td>
+                            <div style="text-align:center">
+                                <span class="glyphicon glyphicon-ok" ng-hide="{{registrant.canEnter}}" style="font-size: 96px;color: green"></span>
+                                <span class="glyphicon glyphicon-remove" ng-show="{{registrant.canEnter}}" style="font-size: 96px; color: red"></span>
+                            </div>
+                        </td>
                     </tr>
                     <tr>
                         <th>Checked in</th>
@@ -26,14 +34,19 @@
                             </div>
                        </td>
                     </tr>
+                    <!--
                     <tr ng-show="registrant.checked_in">
                         <th>Check-in date</th><td>{{registrant.checkin_date}}</td>
                     </tr>
                     <tr>
                         <th>Registration date</th><td>{{registrant.registration_date}}</td>
                     </tr>
+                    -->
                     <!-- If fields are disabled on the server side they will be
                          undefined and we want to hide them. -->
+                    <tr ng-show="registrant.personal_data.birthdate">
+                        <th>Birthdate</th><td>{{registrant.personal_data.birthdate}}</td>
+                    </tr>
                     <tr ng-show="registrant.personal_data.position">
                         <th>Position</th><td>{{registrant.personal_data.position}}</td>
                     </tr>
