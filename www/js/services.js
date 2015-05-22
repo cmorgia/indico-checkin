@@ -243,8 +243,12 @@ angular.module('Checkinapp.services', []).
                 "checked_in": (newValue? "yes": "no"),
             },
             function (data) {
-                var data = JSON.parse(data.text || "{}");
-                callback(data.results);
+                if (data.text=="") {
+                    showAlert("Error", "Unable to perform the check-in service", function() {});
+                } else {
+                    var data = JSON.parse(data.text || "{}");
+                    callback(data.results);
+                }
             },
             function (data) {
                 checkOAuthError(data, function () {
