@@ -55,7 +55,8 @@ function NavigationController($scope, $location, OAuth) {
             $location.path('registrant').search({"registrant_id": data.registrant_id,
                                                  "event_id": data.event_id,
                                                  "server_id": data.server_url.hashCode(),
-                                                 "checkin_secret": data.checkin_secret
+                                                 "checkin_secret": data.checkin_secret,
+                                                 "ts": Math.random()
                                              });
             $scope.$apply();
         });

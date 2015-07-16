@@ -19,8 +19,8 @@
                         </td>
                         <td>
                             <div style="text-align:center">
-                                <span class="glyphicon glyphicon-ok" ng-hide="{{registrant.canEnter}}" style="font-size: 96px;color: green"></span>
-                                <span class="glyphicon glyphicon-remove" ng-show="{{registrant.canEnter}}" style="font-size: 96px; color: red"></span>
+                                <span class="glyphicon glyphicon-ok" ng-show="registrant.canEnter" style="font-size: 96px;color: green"></span>
+                                <span class="glyphicon glyphicon-remove" ng-show="!registrant.canEnter" style="font-size: 96px; color: red"></span>
                             </div>
                         </td>
                     </tr>
