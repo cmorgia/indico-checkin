@@ -260,6 +260,32 @@ angular.module('Checkinapp.services', []).
         );
     }
 
+    function updatePicture(server_id, event_id, registrant_id, checkin_secret, picture_uri, callback) {
+        getOAuthClient(server_id).post(getServer(server_id).baseUrl +
+                      '/api/event/' + event_id +
+                      '/registrant/' + registrant_id + '/updatepicture.json',
+            {
+                "secret": checkin_secret,
+                "picture_uri": picture_uri,
+            },
+            function (data) {
+                if (data.text=="") {
+                    showAlert("Error", "Unable to perform the update picture service", function() {});
+                } else {
+                    var data = JSON.parse(data.text || "{}");
+                    callback(data.results);
+                }
+            },
+            function (data) {
+                checkOAuthError(data, function () {
+                    authenticate(server_id, function () {
+                        updatePicture(server_id, event_id, registrant_id, secret, picture_uri, callback);
+                    });
+                });
+            }
+        );
+    }
+
     function checkOAuthError(data, callback) {
         var parsedData = JSON.parse(data.text);
         if(parsedData._type == "OAuthError" && parsedData.code == 401) {
@@ -285,6 +311,7 @@ angular.module('Checkinapp.services', []).
         getRegistrantsForEvent: getRegistrantsForEvent,
         getRegistrant: getRegistrant,
         checkIn: checkIn,
+        updatePicture: updatePicture,
         getTodaysEvents: getTodaysEvents,
         getUser: function () {
             return user;

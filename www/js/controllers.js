@@ -167,6 +167,7 @@ function RegistrantController($scope, $location, OAuth) {
             showAlert('Error', "It seems there has been a problem retrieving the attendee data", function () {});
             $location.path('events');
         } else {
+            registrant.personal_data.picture = registrant.personal_data.picture+"?_ts="+ new Date().getTime();
             $scope.registrant = registrant;
         }
         $scope.$apply();
@@ -178,6 +179,38 @@ function RegistrantController($scope, $location, OAuth) {
             $scope.registrant.checkin_date = result.checkin_date;
             $scope.registrant.checked_in = result.checked_in;
             $scope.$apply();
+        });
+    };
+
+    $scope.takePicture = function($event) {
+        navigator.customCamera.getPicture("temp.jpg", function success(fileUri) {
+            window.resolveLocalFileSystemURL(fileUri,function(fileEntry){
+                fileEntry.file(function(file) {
+                    var reader = new FileReader();
+                    reader.onloadend = function(e) {
+                        OAuth.updatePicture(data.server_id, data.event_id, data.registrant_id, data.checkin_secret, this.result, function (result) {
+                            console.log(result.status);
+                            if (result.status=="false") {
+                                alert("Unable to upload new picture");
+                            } else {
+                                $scope.$apply();
+                                window.location.reload();
+                            }
+                        });
+                    }
+                    reader.readAsDataURL(file);
+                });
+            },function(e){
+                console.log("FileSystem Error");
+                console.dir(e);
+            });
+            //window.location.reload();
+        }, function failure(error) {
+            alert(error);
+        }, {
+            quality: 80,
+            targetWidth: 120,
+            targetHeight: 120
         });
     };
 }
