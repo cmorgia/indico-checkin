@@ -1,0 +1,91 @@
+{
+  "name": "image-manipulation",
+  "version": "0.0.3",
+  "description": "Library for rotating, cropping, and resizing images within browser",
+  "main": "src/methods.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "./node_modules/karma/bin/karma start",
+    "start": "node example/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sfarthin/crop-rotate-and-sample-in-browser.git"
+  },
+  "author": "Steve Farthing",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sfarthin/crop-rotate-and-sample-in-browser/issues"
+  },
+  "browserify": {
+    "transform": [
+      "browserify-shim"
+    ]
+  },
+  "browser": {
+    "jquery": "./bower_components/jquery/dist/jquery.js",
+    "angular": "./bower_components/angular/angular.js",
+    "jcrop": "./bower_components/jcrop/js/jquery.Jcrop.js"
+  },
+  "browserify-shim": {
+    "jquery": {
+      "exports": "$"
+    },
+    "angular": {
+      "exports": "angular"
+    },
+    "jcrop": {
+      "exports": null,
+      "depends": [
+        "jquery:$"
+      ]
+    }
+  },
+  "testling": {
+    "files": "./testling-ci.js",
+    "scripts": [
+      "./node_modules/jasmine-reporters/lib/jasmine-2.0.0/jasmine.js",
+      "./node_modules/jasmine-reporters/lib/jasmine-2.0.0/jasmine-html.js",
+      "./node_modules/jasmine-reporters/src/tap_reporter.js",
+      "./node_modules/jasmine-reporters/lib/jasmine-2.0.0/boot.js"
+    ],
+    "browsers": [
+      "ie/10..latest",
+      "chrome/22..latest",
+      "firefox/22..latest",
+      "safari/6..latest",
+      "opera/11.0..latest",
+      "iphone/7",
+      "ipad/7",
+      "android-browser/latest"
+    ]
+  },
+  "homepage": "https://github.com/sfarthin/crop-rotate-and-sample-in-browser",
+  "dependencies": {
+    "express": "^4.6.1",
+    "gulp-jade": "^0.6.1",
+    "gulp-less": "^1.3.1",
+    "gulp": "^3.8.5",
+    "browserify": "^4.2.0",
+    "vinyl-source-stream": "^0.1.1",
+    "uglifyify": "^2.5.0",
+    "gcs-signed-urls": "0.0.1",
+    "jade": "^1.4.2",
+    "body-parser": "^1.4.3",
+    "browserify-shim": "^3.6.0",
+    "async": "^0.9.0",
+    "underscore": "^1.7.0"
+  },
+  "devDependencies": {
+    "karma-browserify": "^0.2.1",
+    "karma": "^0.12.22",
+    "karma-jasmine": "^0.2.2",
+    "karma-phantomjs-launcher": "^0.1.4",
+    "karma-chrome-launcher": "^0.1.4",
+    "resemblejs": "^1.1.2",
+    "jasmine-reporters": "^2.0.3",
+    "chromedriver": "^2.10.0-1"
+  }
+}

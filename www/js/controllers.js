@@ -167,7 +167,7 @@ function RegistrantController($scope, $location, OAuth) {
             showAlert('Error', "It seems there has been a problem retrieving the attendee data", function () {});
             $location.path('events');
         } else {
-            registrant.personal_data.picture = registrant.personal_data.picture+"?_ts="+ new Date().getTime();
+            registrant.personal_data.picture = registrant.personal_data.picture+"?ts="+ new Date().getTime();
             $scope.registrant = registrant;
         }
         $scope.$apply();
@@ -182,35 +182,68 @@ function RegistrantController($scope, $location, OAuth) {
         });
     };
 
+    function cropAndResize(image,callback) {
+        var zoomFactor = 3;
+        var sourceX = 0;
+        var sourceY = 0;
+        var sourceWidth = 2448;
+        var sourceHeight = 3264;
+        var destWidth = 225*zoomFactor;
+        var destHeight = 300*zoomFactor;
+        var destX = 150;
+        var destY = 300;
+
+        var canvas = document.createElement("CANVAS");
+        var context = canvas.getContext('2d');
+        canvas.width = sourceWidth;
+        canvas.height = sourceHeight;
+
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            context.drawImage(imageObj, sourceX, sourceY);
+            var croppedCanvas = ImageMethods.crop(canvas,destX,destY,sourceWidth/2-destX,sourceHeight/2-destY);
+            var resizedCanvas = ImageMethods.resize(croppedCanvas, destWidth, destHeight);
+            var dataURL = resizedCanvas.toDataURL();
+            callback(dataURL);
+          };
+        imageObj.src = image;
+    };
+
     $scope.takePicture = function($event) {
         navigator.customCamera.getPicture("temp.jpg", function success(fileUri) {
             window.resolveLocalFileSystemURL(fileUri,function(fileEntry){
                 fileEntry.file(function(file) {
                     var reader = new FileReader();
                     reader.onloadend = function(e) {
-                        OAuth.updatePicture(data.server_id, data.event_id, data.registrant_id, data.checkin_secret, this.result, function (result) {
-                            console.log(result.status);
-                            if (result.status=="false") {
-                                alert("Unable to upload new picture");
-                            } else {
-                                $scope.$apply();
-                                window.location.reload();
-                            }
+                        
+                        cropAndResize(this.result, function(dataURL) {
+
+                            OAuth.updatePicture(data.server_id, data.event_id, data.registrant_id, data.checkin_secret, dataURL, function (result) {
+                                console.log(result.status);
+                                if (result.status=="false") {
+                                    alert("Unable to upload new picture");
+                                } else {
+                                    var url = new Url($scope.registrant.personal_data.picture);
+                                    url.query.ts = new Date().getTime();
+                                    $scope.registrant.personal_data.picture = url.toString();
+                                    $scope.$apply();
+                                
+                                }
+                            });
                         });
-                    }
+                    };
                     reader.readAsDataURL(file);
-                });
+                });                    
             },function(e){
                 console.log("FileSystem Error");
                 console.dir(e);
             });
-            //window.location.reload();
         }, function failure(error) {
             alert(error);
         }, {
-            quality: 80,
-            targetWidth: 120,
-            targetHeight: 120
+            quality: 100,
+            targetWidth: 2448,
+            targetHeight: 3264
         });
     };
 }
