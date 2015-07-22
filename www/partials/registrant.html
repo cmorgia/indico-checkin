@@ -22,8 +22,12 @@
                                 <span class="glyphicon glyphicon-ok" ng-show="registrant.canEnter" style="font-size: 96px;color: green"></span>
                                 <span class="glyphicon glyphicon-remove" ng-show="!registrant.canEnter" style="font-size: 96px; color: red"></span>
                             </div>
+                            <div class="print-button" style="margin-top: 50px" ng-click="printBadge($event)">Print badge</div>
                         </td>
                     </tr>
+                </tbody>
+            </table>
+            <table class="table table-condensed">
                     <tr>
                         <th>Checked in</th>
                         <td>
@@ -34,6 +38,7 @@
                             </div>
                        </td>
                     </tr>
+
                     <!--
                     <tr ng-show="registrant.checked_in">
                         <th>Check-in date</th><td>{{registrant.checkin_date}}</td>
@@ -44,7 +49,7 @@
                     -->
                     <!-- If fields are disabled on the server side they will be
                          undefined and we want to hide them. -->
-                    <tr ng-show="registrant.personal_data.birthdate">
+                    <!-- <tr ng-show="registrant.personal_data.birthdate">
                         <th>Birthdate</th><td>{{registrant.personal_data.birthdate}}</td>
                     </tr>
                     <tr ng-show="registrant.personal_data.position">
@@ -73,6 +78,15 @@
                     </tr>
                     <tr ng-show="registrant.paid">
                         <th>Paid</th><td>{{registrant.paid && 'Yes' || 'No' }}</td>
+                    </tr> -->
+                    <tr ng-show="registrant.personal_data.passportExpire">
+                        <th>Passport expiration</th><td>{{registrant.personal_data.passportExpire}}</td>
+                    </tr>
+                    <tr ng-show="registrant.personal_data.passportOrigin">
+                        <th>Passport country</th><td>{{registrant.personal_data.passportOrigin}}</td>
+                    </tr>
+                    <tr ng-show="registrant.personal_data.passportId">
+                        <th>Passport number</th><td>{{registrant.personal_data.passportId}}</td>
                     </tr>
                 </tbody>
             </table>

@@ -72,9 +72,9 @@ function NavigationController($scope, $location, OAuth) {
         });
     };
 
-    $scope.addEvent = function () {
+    $scope.addSession = function () {
         scanQRCode(function (data) {
-            if(OAuth.getEvent(data.server.baseUrl.hashCode(), data.event_id)) {
+            if(OAuth.getSession(data.server.baseUrl.hashCode(), data.event_id,data.session_id)) {
                 showAlert('Already added', "This event has been already added to the system", function () {});
                 $location.path('events');
                 $scope.$apply();
@@ -93,6 +93,9 @@ function NavigationController($scope, $location, OAuth) {
 
     $scope.back = function() {
         window.history.back();
+    };
+
+    $scope.settings = function () {
     };
 
     $scope.$on('changeTitle', function (event, title) {
@@ -161,6 +164,10 @@ function RegistrantsController($routeParams, $scope, $location, OAuth) {
 function RegistrantController($scope, $location, OAuth) {
 
     var data = $location.search();
+    
+    var printOnServer = false;
+    var performCropAndResize = false;
+    var resetPrinter = false;
 
     OAuth.getRegistrant(data.server_id, data.event_id, data.registrant_id, function (registrant) {
         if(registrant === undefined){
@@ -182,44 +189,63 @@ function RegistrantController($scope, $location, OAuth) {
         });
     };
 
-    function cropAndResize(image,callback) {
-        var zoomFactor = 3;
-        var sourceX = 0;
-        var sourceY = 0;
-        var sourceWidth = 2448;
-        var sourceHeight = 3264;
-        var destWidth = 225*zoomFactor;
-        var destHeight = 300*zoomFactor;
-        var destX = 150;
-        var destY = 300;
+    function cropAndResize(image,options,callback) {
+        if (performCropAndResize) {
+            var zoomFactor = 1;
+            var sourceX = -180;
+            var sourceY = -30;
+            var sourceWidth = options.targetWidth;
+            var sourceHeight = options.targetHeight;
+            var destWidth = 225*zoomFactor;
+            var destHeight = 300*zoomFactor;
+            var destX = 150;
+            var destY = 300;
 
-        var canvas = document.createElement("CANVAS");
-        var context = canvas.getContext('2d');
-        canvas.width = sourceWidth;
-        canvas.height = sourceHeight;
+            var canvas = document.createElement("CANVAS");
+            var context = canvas.getContext('2d');
+            canvas.width = sourceWidth;
+            canvas.height = sourceHeight;
 
-        var imageObj = new Image();
-        imageObj.onload = function() {
-            context.drawImage(imageObj, sourceX, sourceY);
-            var croppedCanvas = ImageMethods.crop(canvas,destX,destY,sourceWidth/2-destX,sourceHeight/2-destY);
-            var resizedCanvas = ImageMethods.resize(croppedCanvas, destWidth, destHeight);
-            var dataURL = resizedCanvas.toDataURL();
-            callback(dataURL);
-          };
-        imageObj.src = image;
+            var imageObj = new Image();
+            imageObj.onload = function() {
+                context.drawImage(imageObj, sourceX, sourceY);
+                var croppedCanvas = ImageMethods.crop(canvas,destX,destY,sourceWidth/2-destX,sourceHeight/2-destY);
+                var resizedCanvas = ImageMethods.resize(croppedCanvas, destWidth, destHeight);
+                var dataURL = resizedCanvas.toDataURL();
+                callback(dataURL);
+              };
+            imageObj.src = image;
+        } else {
+            callback(image);
+        }
     };
 
     $scope.takePicture = function($event) {
+        if (performCropAndResize) {
+            var options = {
+                quality: 85,
+                targetWidth: 1224,
+                targetHeight: 1632
+            };
+        } else {
+            var options = {
+                quality: 85,
+                targetWidth: 225,
+                targetHeight: 300
+            };
+        }
+        
         navigator.customCamera.getPicture("temp.jpg", function success(fileUri) {
             window.resolveLocalFileSystemURL(fileUri,function(fileEntry){
                 fileEntry.file(function(file) {
+                    
                     var reader = new FileReader();
                     reader.onloadend = function(e) {
                         
-                        cropAndResize(this.result, function(dataURL) {
-
+                        cropAndResize(this.result, options, function(dataURL) {
+                            
                             OAuth.updatePicture(data.server_id, data.event_id, data.registrant_id, data.checkin_secret, dataURL, function (result) {
-                                console.log(result.status);
+                                
                                 if (result.status=="false") {
                                     alert("Unable to upload new picture");
                                 } else {
@@ -240,10 +266,28 @@ function RegistrantController($scope, $location, OAuth) {
             });
         }, function failure(error) {
             alert(error);
-        }, {
-            quality: 100,
-            targetWidth: 2448,
-            targetHeight: 3264
-        });
+        }, options);
+    };
+
+    $scope.printBadge = function($event) {
+        if (printOnServer) {
+            OAuth.remotePrintBadge(data.server_id, data.event_id, data.registrant_id, function (result) {
+                alert(result);
+            });
+        } else {
+            OAuth.getBadge(data.server_id, data.event_id, data.registrant_id, function (pdf) {
+                window.plugins.PrintPDF.print({
+                    type: 'base64',
+                    data: pdf,
+                    title: 'Badge',
+                    success: function(){
+                        console.log('success');
+                    },
+                    error: function(data){
+                        console.log('failed: ' + data.error);
+                    }
+                });
+            });
+        }
     };
 }

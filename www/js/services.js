@@ -286,6 +286,48 @@ angular.module('Checkinapp.services', []).
         );
     }
 
+    function remotePrintBadge(server_id, event_id, registrant_id, callback) {
+        getOAuthClient(server_id).post(getServer(server_id).baseUrl +
+                      '/event/' + event_id +
+                      '/manage/registration/users/' + registrant_id + '/mobilePrintBadge',
+            {
+                "confId": event_id,
+                "registrantId": registrant_id,
+            },
+            function (msg) {
+                callback(msg);
+            },
+            function (data) {
+                checkOAuthError(data, function () {
+                    authenticate(server_id, function () {
+                        remotePrintBadge(server_id, event_id, registrant_id, callback);
+                    });
+                });
+            }
+        );
+    }
+
+    function getBadge(server_id, event_id, registrant_id, callback) {
+        getOAuthClient(server_id).get(getServer(server_id).baseUrl +
+                      '/event/' + event_id +
+                      '/manage/registration/users/' + registrant_id + '/printbadge?base64=true',
+            function (data) {
+                if (data.text=="") {
+                    showAlert("Error", "Unable to retrieve the badge", function() {});
+                } else {
+                    callback(data.text);
+                }
+            },
+            function (data) {
+                checkOAuthError(data, function () {
+                    authenticate(server_id, function () {
+                        getBadge(server_id, event_id, registrant_id, callback);
+                    });
+                });
+            }
+        );
+    }
+
     function checkOAuthError(data, callback) {
         var parsedData = JSON.parse(data.text);
         if(parsedData._type == "OAuthError" && parsedData.code == 401) {
@@ -313,6 +355,8 @@ angular.module('Checkinapp.services', []).
         checkIn: checkIn,
         updatePicture: updatePicture,
         getTodaysEvents: getTodaysEvents,
+        getBadge: getBadge,
+        remotePrintBadge: remotePrintBadge,
         getUser: function () {
             return user;
         }
