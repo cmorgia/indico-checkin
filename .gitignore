@@ -2,3 +2,5 @@ platforms/*
 plugins/*
 merges/*
 .DS_Store
+
+npm-debug.log
