@@ -59,4 +59,8 @@
     <plugin name="cordova-plugin-print-pdf" spec="https://github.com/sarahgoldman/cordova-print-pdf-plugin.git" />
     <plugin name="org.apache.cordova.splashscreen" spec="^1.0.0" />
     <engine name="android" spec="4.0.2" />
+    <plugin name="com.phonegap.plugins.barcodescanner" spec="^2.0.1" />
+    <plugin name="org.apache.cordova.dialogs" spec="^0.3.0" />
+    <plugin name="cordova-plugin-inappbrowser" spec="^1.0.2-dev" />
+    <plugin name="org.apache.cordova.network-information" spec="^0.2.15" />
 </widget>
