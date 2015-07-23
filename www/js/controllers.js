@@ -165,8 +165,8 @@ function RegistrantController($scope, $location, OAuth) {
 
     var data = $location.search();
     
-    var printOnServer = false;
-    var performCropAndResize = false;
+    var printOnServer = true;
+    var performCropAndResize = true;
     var resetPrinter = false;
 
     OAuth.getRegistrant(data.server_id, data.event_id, data.registrant_id, function (registrant) {
