@@ -72,9 +72,9 @@ function NavigationController($scope, $location, OAuth) {
         });
     };
 
-    $scope.addSession = function () {
+    $scope.addEvent = function () {
         scanQRCode(function (data) {
-            if(OAuth.getSession(data.server.baseUrl.hashCode(), data.event_id,data.session_id)) {
+            if(OAuth.getEvent(data.server.baseUrl.hashCode(), data.event_id)) {
                 showAlert('Already added', "This event has been already added to the system", function () {});
                 $location.path('events');
                 $scope.$apply();

@@ -159,6 +159,9 @@ angular.module('Checkinapp.services', []).
         event_to_store.title = event.title;
         event_to_store.date = event.date;
         event_to_store.server_id = server_id;
+        if (event.hasOwnProperty('session_id')) {
+            event_to_store.session_id = event.session_id;
+        }
         events[getEventKey(server_id, event.event_id)] = event_to_store;
         localStorage.setItem('events', JSON.stringify(events));
     }
@@ -184,9 +187,15 @@ angular.module('Checkinapp.services', []).
     }
 
     function getRegistrantsForEvent(server_id, event_id, callback) {
+        var event = getEvent(server_id,event_id);
+        var postfix = '/registrants.json';
+        if (event.hasOwnProperty('session_id')) {
+            postfix = '/session/'+event.session_id+'/registrants.json';
+        }
+        
         getOAuthClient(server_id).getJSON(getServer(server_id).baseUrl +
                       '/export/event/' +
-                      event_id + '/registrants.json',
+                      event_id + postfix,
             function (data) {
                 callback(data.results);
             },
