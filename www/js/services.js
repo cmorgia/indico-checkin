@@ -295,6 +295,32 @@ angular.module('Checkinapp.services', []).
         );
     }
 
+    function updatePassport(server_id, event_id, registrant_id, checkin_secret, passport_info, callback) {
+        getOAuthClient(server_id).post(getServer(server_id).baseUrl +
+                      '/api/event/' + event_id +
+                      '/registrant/' + registrant_id + '/updatepassport.json',
+            {
+                "secret": checkin_secret,
+                "passport_info":  JSON.stringify(passport_info),
+            },
+            function (data) {
+                if (data.text=="") {
+                    showAlert("Error", "Unable to perform the update passport service", function() {});
+                } else {
+                    var data = JSON.parse(data.text || "{}");
+                    callback(data.results);
+                }
+            },
+            function (data) {
+                checkOAuthError(data, function () {
+                    authenticate(server_id, function () {
+                        updatePassport(server_id, event_id, registrant_id, secret, passport_info, callback);
+                    });
+                });
+            }
+        );
+    }
+
     function remotePrintBadge(server_id, event_id, registrant_id, callback) {
         getOAuthClient(server_id).post(getServer(server_id).baseUrl +
                       '/event/' + event_id +
@@ -366,6 +392,7 @@ angular.module('Checkinapp.services', []).
         getTodaysEvents: getTodaysEvents,
         getBadge: getBadge,
         remotePrintBadge: remotePrintBadge,
+        updatePassport: updatePassport,
         getUser: function () {
             return user;
         }

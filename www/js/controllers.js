@@ -290,4 +290,38 @@ function RegistrantController($scope, $location, OAuth) {
             });
         }
     };
+
+    $scope.scanmrz = function($event) {
+        anyline.mrz.scan(
+            function(passport_info){
+                console.log(passport_info);
+                OAuth.updatePassport(data.server_id, data.event_id, data.registrant_id, data.checkin_secret, passport_info, function (result) {
+                    if (result.status=="false") {
+                        alert("Unable to update passport info");
+                    } else {
+                        $scope.registrant.personal_data.passportId = passport_info.documentNumber;
+                        $scope.registrant.personal_data.passportExpire = passport_info.expirationDate;
+                        $scope.registrant.personal_data.passportOrigin = passport_info.countryCode;
+                        $scope.registrant.personal_data.birthDate = passport_info.dayOfBirth;
+                        $scope.registrant.personal_data.firstName = passport_info.givenNames;
+                        $scope.registrant.personal_data.surname = passport_info.surNames;
+                        $scope.registrant.fullName = $scope.registrant.personal_data.title+" "+passport_info.givenNames+" "+passport_info.surNames;
+                        $scope.$apply();
+                                
+                    }
+                });
+            },
+            function(error){
+                //called if an error occurred or the user canceled the scanning
+                if (error == "Canceled") {
+                    //do stuff when user has canceled
+                    // this can be used as an indicator that the user finished the scanning if canclelOnResult is false
+                    console.log("MRZ scanning canceled");
+                    return;
+                }
+
+                alert(error);
+            }
+        );
+    };
 }
