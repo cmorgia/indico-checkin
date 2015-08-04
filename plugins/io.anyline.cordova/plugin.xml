@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin
+    xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    id="io.anyline.cordova"
+    version="3.1-alpha1">
+
+  <name>AnylineSDK</name>
+  <platform name="ios">
+    <plugins-plist  key="AnylineSDK" string="AnylineSDKPlugin"/>
+<!-- feature tag in config.xml -->
+    <config-file parent="/widget" target="config.xml">
+      <feature name="AnylineSDK">
+        <param  name="ios-package" value="AnylineSDKPlugin"/>
+      </feature>
+    </config-file>
+
+    <resource-file  src="src/ios/anyline_sdk/AnylineResources.bundle"/>
+
+<!-- Anyline SDK Cordova Plugin Source for iOS -->
+    <header-file  src="src/ios/AnylineSDKPlugin.h"/>
+    <source-file  src="src/ios/AnylineSDKPlugin.m"/>
+    <header-file  src="src/ios/AnylineBaseScanViewController.h"/>
+    <source-file  src="src/ios/AnylineBaseScanViewController.m"/>
+    <header-file  src="src/ios/AnylineBarcodeScanViewController.h"/>
+    <source-file  src="src/ios/AnylineBarcodeScanViewController.m"/>
+    <header-file  src="src/ios/AnylineMRZScanViewController.h"/>
+    <source-file  src="src/ios/AnylineMRZScanViewController.m"/>
+    <header-file  src="src/ios/AnylineEnergyScanViewController.h"/>
+    <source-file  src="src/ios/AnylineEnergyScanViewController.m"/>
+<!-- Frameworks needed by Anyline SDK for iOS -->
+    <framework  src="ImageIO.framework"/>
+    <framework  custom="true" src="src/ios/anyline_sdk/Anyline.framework"/>
+    <framework  src="libstdc++.6.0.9.dylib"/>
+    <framework  src="libiconv.dylib"/>
+    <framework  src="libz.dylib"/>
+    <framework  src="libc++.dylib"/>
+    <framework  src="AssetsLibrary.framework"/>
+    <framework  src="AudioToolbox.framework"/>
+    <framework  src="AVFoundation.framework"/>
+    <framework  src="CoreGraphics.framework"/>
+    <framework  src="CoreMedia.framework"/>
+    <framework  src="CoreVideo.framework"/>
+    <framework  src="QuartzCore.framework"/>
+
+  </platform>
+  <platform name="android">
+<!-- register plugin -->
+    <resource-file  src="src/android/anyline_sdk/libs/AnylineSDK.aar" target="libs/AnylineSDK.aar"/>
+    <framework  custom="true" src="src/android/anyline.gradle" type="gradleReference"/>
+
+    <config-file parent="/*" target="config.xml">
+      <feature name="AnylineSDK">
+        <param  name="android-package" value="io.anyline.cordova.AnylinePlugin"/>
+        <param  name="onload" value="true"/>
+      </feature>
+    </config-file>
+<!-- add permissions in AndroidManifest.xml file-->
+    <config-file mode="merge" parent="/manifest" target="AndroidManifest.xml">
+      <uses-permission  android:name="android.permission.CAMERA"/>
+      <uses-permission  android:name="android.permission.VIBRATE"/>
+    </config-file>
+    <config-file mode="merge" parent="/manifest/application" target="AndroidManifest.xml">
+      <activity  android:name="io.anyline.cordova.BarcodeActivity" android:theme="@android:style/Theme.Black.NoTitleBar"/>
+      <activity  android:name="io.anyline.cordova.MrzActivity" android:theme="@android:style/Theme.Black.NoTitleBar"/>
+      <activity  android:name="io.anyline.cordova.EnergyActivity" android:theme="@android:style/Theme.Black.NoTitleBar"/>
+    </config-file>
+
+<!-- add plugin source code -->
+    <source-file  src="src/android/io/anyline/cordova/AnylinePlugin.java" target-dir="src/io/anyline/cordova"/>
+    <source-file  src="src/android/io/anyline/cordova/BarcodeActivity.java" target-dir="src/io/anyline/cordova"/>
+    <source-file  src="src/android/io/anyline/cordova/MrzActivity.java" target-dir="src/io/anyline/cordova"/>
+    <source-file  src="src/android/io/anyline/cordova/EnergyActivity.java" target-dir="src/io/anyline/cordova"/>
+    <source-file  src="src/android/io/anyline/cordova/ResultReporter.java" target-dir="src/io/anyline/cordova"/>
+
+  </platform>
+</plugin>

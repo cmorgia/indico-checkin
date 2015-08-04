@@ -1,5 +1,7 @@
 platforms/*
 plugins/*
+!plugins/io.anyline.cordova
+!plugins/anylinesdk-plugin
 merges/*
 .DS_Store
 
