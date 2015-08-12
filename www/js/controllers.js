@@ -53,7 +53,7 @@ function NavigationController($scope, $location, OAuth) {
         scanQRCode(function (data) {
             // removed the check for an existing event (UNOG Security use case)
             $location.path('registrant').search({"registrant_id": data.registrant_id,
-                                                 "event_id": data.event_id,
+                                                 "session_id": data.session_id,
                                                  "server_id": data.server_url.hashCode(),
                                                  "checkin_secret": data.checkin_secret,
                                                  "ts": Math.random()
@@ -182,7 +182,7 @@ function RegistrantController($scope, $location, OAuth) {
 
     $scope.checkin_registrant = function($event) {
         var toggled =  angular.element($event.currentTarget).hasClass("toggled");
-        OAuth.checkIn(data.server_id, data.event_id, data.registrant_id, data.checkin_secret, !toggled, function (result) {
+        OAuth.checkIn(data, !toggled, function (result) {
             $scope.registrant.checkin_date = result.checkin_date;
             $scope.registrant.checked_in = result.checked_in;
             $scope.$apply();

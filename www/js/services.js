@@ -190,7 +190,7 @@ angular.module('Checkinapp.services', []).
         var event = getEvent(server_id,event_id);
         var postfix = '/registrants.json';
         if (event.hasOwnProperty('session_id')) {
-            postfix = '/session/'+event.session_id+'/registrants.json';
+            postfix = '/session/'+event.session_id+postfix;
         }
         
         getOAuthClient(server_id).getJSON(getServer(server_id).baseUrl +
@@ -243,9 +243,20 @@ angular.module('Checkinapp.services', []).
         );
     }
 
-    function checkIn(server_id, event_id, registrant_id, checkin_secret, newValue, callback) {
+    function checkIn(data, newValue, callback) {
+        var server_id=data.server_id;
+        var event_id = data.event_id;
+        var event_obj = getEvent(server_id,event_id);
+        var registrant_id = data.registrant_id;
+        var checkin_secret = data.checkin_secret;
+        var session_part = "";
+        if (event_obj.hasOwnProperty('session_id')) {
+            session_part = "/session/"+event_obj.session_id;
+        }
+
         getOAuthClient(server_id).post(getServer(server_id).baseUrl +
                       '/api/event/' + event_id +
+                      session_part +
                       '/registrant/' + registrant_id + '/checkin.json',
             {
                 "secret": checkin_secret,
@@ -262,7 +273,7 @@ angular.module('Checkinapp.services', []).
             function (data) {
                 checkOAuthError(data, function () {
                     authenticate(server_id, function () {
-                        checkIn(server_id, event_id, registrant_id, secret, newValue, callback);
+                        checkIn(data, newValue, callback);
                     });
                 });
             }
