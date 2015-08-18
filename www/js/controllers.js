@@ -305,7 +305,7 @@ function RegistrantController($scope, $location, OAuth) {
                         $scope.registrant.personal_data.birthDate = passport_info.dayOfBirth;
                         $scope.registrant.personal_data.firstName = passport_info.givenNames;
                         $scope.registrant.personal_data.surname = passport_info.surNames;
-                        $scope.registrant.fullName = $scope.registrant.personal_data.title+" "+passport_info.givenNames+" "+passport_info.surNames;
+                        $scope.registrant.full_name = $scope.registrant.personal_data.title+" "+passport_info.givenNames+" "+passport_info.surNames;
                         $scope.$apply();
                                 
                     }
