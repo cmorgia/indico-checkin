@@ -18,7 +18,7 @@
                             <img width="225px" height="300px" src="{{registrant.personal_data.picture}}" ng-click="takePicture($event)">
                         </td>
                         <td>
-                            <div style="text-align:center">
+                            <div style="text-align:center" ng-click="showStatus($event)">
                                 <span class="glyphicon glyphicon-ok" ng-show="registrant.canEnter" style="font-size: 96px;color: green"></span>
                                 <span class="glyphicon glyphicon-remove" ng-show="!registrant.canEnter" style="font-size: 96px; color: red"></span>
                             </div>

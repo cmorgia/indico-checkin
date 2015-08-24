@@ -229,6 +229,11 @@ function RegistrantController($scope, $location, OAuth) {
         }
     };
 
+    $scope.showStatus = function($event) {
+        console.log($scope.registrant.canEnterMessage);
+        alert($scope.registrant.canEnterMessage);
+    };
+    
     $scope.takePicture = function($event) {
         if (performCropAndResize) {
             var options = {
