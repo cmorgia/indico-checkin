@@ -53,6 +53,7 @@ function NavigationController($scope, $location, OAuth) {
         scanQRCode(function (data) {
             // removed the check for an existing event (UNOG Security use case)
             $location.path('registrant').search({"registrant_id": data.registrant_id,
+                                                 "event_id": data.event_id,
                                                  "session_id": data.session_id,
                                                  "server_id": data.server_url.hashCode(),
                                                  "checkin_secret": data.checkin_secret,
@@ -95,10 +96,18 @@ function NavigationController($scope, $location, OAuth) {
         window.history.back();
     };
 
+    $scope.reset = function() {
+        $scope.simplifiedUI=false;
+        localStorage.clear();
+        $location.path('events');
+    };
+
     $scope.settings = function () {
     };
 
     $scope.$on('changeTitle', function (event, title) {
+        console.log(event);
+        console.log(title);
         $scope.title = title;
     });
 }
@@ -106,7 +115,7 @@ function NavigationController($scope, $location, OAuth) {
 function EventsController($scope, $location, OAuth) {
 
     $scope.events = OAuth.getEvents();
-    $scope.$emit('changeTitle', "Indico check-in");
+    $scope.$emit('changeTitle', "UNOG check-in");
 
     $scope.go_to_registrants = function (event_id, server_id) {
         $location.path('server/' + server_id + "/event/" + event_id);

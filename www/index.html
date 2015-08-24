@@ -14,7 +14,10 @@
             <a ng-hide="isCurrentLocation('/')" ng-click="back()">
                 <span class="glyphicon glyphicon-chevron-left"></span>
             </a>
-            <span class="title centered">{{title}}</span>
+            <span class="title centered" style="margin-top: 6px;">{{title}}</span>
+            <a ng-click="reset()" style="float: right; margin-top: 6px;">
+                <span class="glyphicon glyphicon-trash"></span>
+            </a>
         </header>
         <div class="container">
             <ng-view></ng-view>
