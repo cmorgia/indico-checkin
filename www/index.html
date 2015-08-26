@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:ng="http://angularjs.org" ng-app="Checkinapp">
+<html xmlns:ng="http://angularjs.org" ng-app="Checkinapp" ng-init="simplifiedUI=false">
     <head>
         <meta charset="utf-8" />
         <meta name="format-detection" content="telephone=no" />
@@ -32,11 +32,11 @@
                     <span class="glyphicon glyphicon-refresh"></span>
                     Refresh
                 </a>
-                <a ng-click="allEvents()" ng-hide="simplifiedUI">
+                <a ng-click="allEvents()" ng-hide="$parent.simplifiedUI">
                     <span class="glyphicon glyphicon-list"></span>
                     All events
                 </a>
-                <a ng-click="addEvent()" ng-hide="simplifiedUI">
+                <a ng-click="addEvent()" ng-hide="$parent.simplifiedUI">
                     <span class="glyphicon glyphicon-plus"></span>
                     Add event
                 </a>

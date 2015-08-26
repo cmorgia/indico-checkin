@@ -18,16 +18,27 @@
 var module = angular.module('Checkinapp.services', []);
 
 module.service('Config',function() {
-    var simplifiedUI;
-    var confOfficerUI;
-    var airPrint;
-    var cropAndResize;
+    var simplifiedUI = isSimplifiedUI();
+    var confOfficerUI = isConfOfficerUI();
+    var airPrint = isAirPrintEnabled();
+    var cropAndResize = isCropAndResizeEnabled();
 
     function reset() {
-        fullUI();
-        setConfOfficerUI(false);
-        disableAirPrint();
-        enableCropAndResize
+        if (localStorage.getItem('simplifiedUI')===null) {
+            fullUI();
+        }
+
+        if (localStorage.getItem('confOfficerUI')===null) {
+            setConfOfficerUI(false);
+        }
+
+        if (localStorage.getItem('airPrint')===null) {
+            disableAirPrint();
+        }
+
+        if (localStorage.getItem('cropAndResize')===null) {
+            enableCropAndResize();
+        }        
     }
 
     function isSimplifiedUI() {
@@ -459,7 +470,7 @@ module.service('OAuth', function () {
     function remotePrintBadge(server_id, event_id, registrant_id, callback) {
         getOAuthClient(server_id).post(getServer(server_id).baseUrl +
                       '/event/' + event_id +
-                      '/manage/registration/users/' + registrant_id + '/mobilePrintBadge',
+                      '/manage/registration/users/' + registrant_id + '/printbadge?base64=true',
             {
                 "confId": event_id,
                 "registrantId": registrant_id,
@@ -480,7 +491,7 @@ module.service('OAuth', function () {
     function getBadge(server_id, event_id, registrant_id, callback) {
         getOAuthClient(server_id).get(getServer(server_id).baseUrl +
                       '/event/' + event_id +
-                      '/manage/registration/users/' + registrant_id + '/printbadge?base64=true',
+                      '/manage/registration/users/' + registrant_id + '/mobilePrintBadge',
             function (data) {
                 if (data.text=="") {
                     showAlert("Error", "Unable to retrieve the badge", function() {});

@@ -21,10 +21,27 @@
                     <tr>
                         <th>Enable AirPrint</th>
                         <td>
-                            <input type="checkbox" ngModel="airPrint" ng-click="toggleAirPrint()">
+                            <input type="checkbox" ng-model="airPrint" ng-change="toggleAirPrint()">
                         </td>
                     </tr>
-
+                    <tr>
+                        <th>Enable Simplified UI</th>
+                        <td>
+                            <input type="checkbox" ng-model="simplifiedUI" ng-change="toggleSimplifiedUI()">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Enable Conf Officer UI</th>
+                        <td>
+                            <input type="checkbox" ng-model="confOfficerUI" ng-change="toggleConfOfficerUI()">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Enable Crop and Resize</th>
+                        <td>
+                            <input type="checkbox" ng-model="performCropAndResize" ng-change="toggleCropAndResize()">
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
