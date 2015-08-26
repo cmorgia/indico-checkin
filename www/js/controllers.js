@@ -16,7 +16,6 @@
  */
 
 function NavigationController($scope, $location, OAuth) {
-
     function scanQRCode(callback) {
         cordova.plugins.barcodeScanner.scan(
             function (result) {
@@ -54,7 +53,6 @@ function NavigationController($scope, $location, OAuth) {
             // removed the check for an existing event (UNOG Security use case)
             $location.path('registrant').search({"registrant_id": data.registrant_id,
                                                  "event_id": data.event_id,
-                                                 "session_id": data.session_id,
                                                  "server_id": data.server_url.hashCode(),
                                                  "checkin_secret": data.checkin_secret,
                                                  "ts": Math.random()
@@ -100,9 +98,6 @@ function NavigationController($scope, $location, OAuth) {
         $scope.simplifiedUI=false;
         localStorage.clear();
         $location.path('events');
-    };
-
-    $scope.settings = function () {
     };
 
     $scope.$on('changeTitle', function (event, title) {
@@ -177,12 +172,17 @@ function RegistrantController($scope, $location, OAuth) {
     var printOnServer = true;
     var performCropAndResize = true;
     var resetPrinter = false;
-
+    $scope.confOfficerUI=false;
+    
     OAuth.getRegistrant(data.server_id, data.event_id, data.registrant_id, function (registrant) {
-        if(registrant === undefined){
-            showAlert('Error', "It seems there has been a problem retrieving the attendee data", function () {});
+        if ((registrant === undefined) || (registrant=="")) {
+            showAlert('Error', "The registrant cannot be found or it's not approved for the session", function () {});
             $location.path('events');
         } else {
+            var evt = OAuth.getEvent(data.server_id, data.event_id)
+            if (evt.hasOwnProperty("session_id")) {
+                $scope.confOfficerUI = true
+            }
             registrant.personal_data.picture = registrant.personal_data.picture+"?ts="+ new Date().getTime();
             $scope.registrant = registrant;
         }

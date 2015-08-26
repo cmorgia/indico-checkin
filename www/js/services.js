@@ -15,8 +15,7 @@
  * along with Indico check-in; if not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('Checkinapp.services', []).
-    service('OAuth', function () {
+angular.module('Checkinapp.services', []).service('OAuth', function () {
 
     var user = null;
     var OAuthClients = {};
@@ -227,9 +226,14 @@ angular.module('Checkinapp.services', []).
 
 
     function getRegistrant(server_id, event_id, registrant_id, callback) {
+        var event = getEvent(server_id,event_id);
+        var postfix = '/registrant/';
+        if (event.hasOwnProperty('session_id')) {
+            postfix = '/session/'+event.session_id+postfix;
+        }
         getOAuthClient(server_id).getJSON(getServer(server_id).baseUrl +
                       '/export/event/' + event_id +
-                      '/registrant/' + registrant_id + '.json',
+                      postfix + registrant_id + '.json',
             function (data) {
                 callback(data.results);
             },
