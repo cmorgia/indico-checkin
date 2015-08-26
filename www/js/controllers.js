@@ -100,11 +100,47 @@ function NavigationController($scope, $location, OAuth) {
         $location.path('events');
     };
 
+    $scope.config = function() {
+        $location.path('config');
+    };
+
     $scope.$on('changeTitle', function (event, title) {
         console.log(event);
         console.log(title);
         $scope.title = title;
     });
+}
+
+function ConfigController($scope, $location, Config) {
+    $scope.simplifiedUI = Config.isSimplifiedUI();
+    $scope.confOfficerUI = Config.isConfOfficerUI();
+    $scope.airPrint = Config.isAirPrintEnabled();
+    $scope.performCropAndResize = Config.isCropAndResizeEnabled();
+
+    $scope.toggleSimplifiedUI = function() {
+        Config.toggleSimplifiedUI();
+    };
+
+    $scope.toggleConfOfficerUI = function() {
+        Config.toggleConfOfficerUI();
+    };
+
+    $scope.toggleAirPrint = function() {
+        Config.toggleAirPrintEnabled();
+    };
+
+    $scope.toggleCropAndResize = function() {
+        Config.toggleCropAndResizeEnabled();
+    };
+
+    $scope.reset = function() {
+        Config.reset();
+        $scope.simplifiedUI = Config.isSimplifiedUI();
+        $scope.confOfficerUI = Config.isConfOfficerUI();
+        $scope.airPrint = Config.isAirPrintEnabled();
+        $scope.performCropAndResize = Config.isCropAndResizeEnabled();
+        $location.path('events');
+    };
 }
 
 function EventsController($scope, $location, OAuth) {

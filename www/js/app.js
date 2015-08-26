@@ -56,6 +56,10 @@ angular.module('Checkinapp', ['ngTouch', 'ngRoute', 'ui.bootstrap', 'Checkinapp.
             templateUrl: 'partials/registrant.html',
             controller: 'RegistrantController'
         }).
+        when('/config', {
+            templateUrl: 'partials/config.html',
+            controller: 'ConfigController'
+        }).
         otherwise({
             redirectTo: '/'
         });

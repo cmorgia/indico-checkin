@@ -1,0 +1,32 @@
+<div class="row">
+    <div class="col-md-12" >
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <div>Configuration page</div>
+                    <small>
+                        A message
+                     </small>
+                </h3>
+            </div>
+            <table class="table table-condensed">
+                    <tr>
+                        <th>Reset configuration</th>
+                        <td>
+                            <div class="print-button"
+                                 ng-click="reset()">Reset
+                            </div>
+                       </td>
+                    </tr>
+                    <tr>
+                        <th>Enable AirPrint</th>
+                        <td>
+                            <input type="checkbox" ngModel="airPrint" ng-click="toggleAirPrint()">
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

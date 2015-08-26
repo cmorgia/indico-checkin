@@ -15,7 +15,127 @@
  * along with Indico check-in; if not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('Checkinapp.services', []).service('OAuth', function () {
+var module = angular.module('Checkinapp.services', []);
+
+module.service('Config',function() {
+    var simplifiedUI;
+    var confOfficerUI;
+    var airPrint;
+    var cropAndResize;
+
+    function reset() {
+        fullUI();
+        setConfOfficerUI(false);
+        disableAirPrint();
+        enableCropAndResize
+    }
+
+    function isSimplifiedUI() {
+        simplifiedUI = JSON.parse(localStorage.getItem('simplifiedUI'));
+        return simplifiedUI;
+    }
+
+    function setSimplifiedUI(val) {
+        simplifiedUI = val;
+        localStorage.setItem('simplifiedUI',JSON.stringify(simplifiedUI));
+    }
+
+    function simplifyUI() {
+        setSimplifiedUI(true);
+    }
+
+    function fullUI() {
+        setSimplifiedUI(false);
+    }
+
+    function toggleSimplifiedUI() {
+        setSimplifiedUI(!simplifiedUI);
+    }
+
+    function isConfOfficerUI() {
+        confOfficerUI = JSON.parse(localStorage.getItem('confOfficerUI'));
+        return confOfficerUI;
+    }
+
+    function setConfOfficerUI(val) {
+        confOfficerUI = val;
+        localStorage.setItem('confOfficerUI',JSON.stringify(confOfficerUI));
+    }
+
+    function toggleConfOfficerUI() {
+        setConfOfficerUI(!confOfficerUI);
+    }
+
+    function isAirPrintEnabled() {
+        airPrint = JSON.parse(localStorage.getItem('airPrint'));
+        return airPrint;
+    }
+
+    function setAirPrint(val) {
+        airPrint = val;
+        localStorage.setItem('airPrint',JSON.stringify(airPrint));
+    }
+
+    function enableAirPrint() {
+        setAirPrint(true);
+    }
+
+    function disableAirPrint() {
+        setAirPrint(false);
+    }
+
+    function toggleAirPrintEnabled() {
+        setAirPrint(!airPrint);
+    }
+
+    function isCropAndResizeEnabled() {
+        cropAndResize = JSON.parse(localStorage.getItem('cropAndResize'));
+        return cropAndResize;
+    }
+
+    function setCropAndResize(val) {
+        cropAndResize = val;
+        localStorage.setItem('cropAndResize',JSON.stringify(cropAndResize));
+    }
+
+    function enableCropAndResize() {
+        setCropAndResize(true);
+    }
+
+    function disableCropAndResize() {
+        setCropAndResize(false);
+    }
+
+    function toggleCropAndResizeEnabled() {
+        setCropAndResize(!cropAndResize);
+    }
+
+    reset();
+    
+    return {
+        isSimplifiedUI: isSimplifiedUI,
+        setSimplifiedUI: setSimplifiedUI,
+        simplifyUI: simplifyUI,
+        fullUI: fullUI,
+        toggleSimplifiedUI: toggleSimplifiedUI,
+        isConfOfficerUI: isConfOfficerUI,
+        setConfOfficerUI: setConfOfficerUI,
+        toggleConfOfficerUI: toggleConfOfficerUI,
+        isAirPrintEnabled: isAirPrintEnabled,
+        setAirPrint: setAirPrint,
+        enableAirPrint: enableAirPrint,
+        disableAirPrint: disableAirPrint,
+        toggleAirPrintEnabled: toggleAirPrintEnabled,
+        isCropAndResizeEnabled: isCropAndResizeEnabled,
+        setCropAndResize: setCropAndResize,
+        enableCropAndResize: enableCropAndResize,
+        disableCropAndResize: disableCropAndResize,
+        toggleCropAndResizeEnabled: toggleCropAndResizeEnabled,
+        reset: reset
+    }
+});
+
+module.service('OAuth', function () {
 
     var user = null;
     var OAuthClients = {};
