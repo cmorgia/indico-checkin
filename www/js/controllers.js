@@ -15,7 +15,7 @@
  * along with Indico check-in; if not, see <http://www.gnu.org/licenses/>.
  */
 
-function NavigationController($scope, $location, OAuth) {
+function NavigationController($rootScope, $scope, $location, OAuth, Config) {
     function scanQRCode(callback) {
         cordova.plugins.barcodeScanner.scan(
             function (result) {
@@ -65,7 +65,8 @@ function NavigationController($scope, $location, OAuth) {
         scanQRCode(function (data) {
             OAuth.addServer(data, function () {
                 $scope.server=data;
-                $scope.simplifiedUI=true;
+                Config.simplifyUI();
+                $rootScope.simplifiedUI=Config.isSimplifiedUI();
                 $scope.fetchTodaysEvents();  
             });
         });
@@ -94,23 +95,59 @@ function NavigationController($scope, $location, OAuth) {
         window.history.back();
     };
 
-    $scope.reset = function() {
-        $scope.simplifiedUI=false;
-        localStorage.clear();
-        $location.path('events');
+    $scope.config = function() {
+        $location.path('config');
     };
 
     $scope.$on('changeTitle', function (event, title) {
-        console.log(event);
-        console.log(title);
         $scope.title = title;
     });
+
 }
 
-function EventsController($scope, $location, OAuth) {
+function ConfigController($scope, $location, Config) {
+    $scope.simplifiedUI = Config.isSimplifiedUI();
+    $scope.confOfficerUI = Config.isConfOfficerUI();
+    $scope.airPrint = Config.isAirPrintEnabled();
+    $scope.performCropAndResize = Config.isCropAndResizeEnabled();
+
+    $scope.toggleSimplifiedUI = function() {
+        Config.toggleSimplifiedUI();
+        $scope.simplifiedUI = Config.isSimplifiedUI();
+    };
+
+    $scope.toggleConfOfficerUI = function() {
+        Config.toggleConfOfficerUI();
+        $scope.confOfficerUI = Config.isConfOfficerUI();
+    };
+
+    $scope.toggleAirPrint = function() {
+        Config.toggleAirPrintEnabled();
+        $scope.airPrint = Config.isAirPrintEnabled();
+    };
+
+    $scope.toggleCropAndResize = function() {
+        Config.toggleCropAndResizeEnabled();
+        $scope.performCropAndResize = Config.isCropAndResizeEnabled();
+    };
+
+    $scope.reset = function() {
+        Config.reset();
+        $scope.simplifiedUI = Config.isSimplifiedUI();
+        $scope.confOfficerUI = Config.isConfOfficerUI();
+        $scope.airPrint = Config.isAirPrintEnabled();
+        $scope.performCropAndResize = Config.isCropAndResizeEnabled();
+        localStorage.removeItem('servers');
+        localStorage.removeItem('events');
+        $location.path('events');
+    };
+}
+
+function EventsController($rootScope, $scope, $location, OAuth,Config) {
 
     $scope.events = OAuth.getEvents();
     $scope.$emit('changeTitle', "UNOG check-in");
+    $rootScope.simplifiedUI = Config.isSimplifiedUI();
 
     $scope.go_to_registrants = function (event_id, server_id) {
         $location.path('server/' + server_id + "/event/" + event_id);
@@ -165,14 +202,12 @@ function RegistrantsController($routeParams, $scope, $location, OAuth) {
     };
 }
 
-function RegistrantController($scope, $location, OAuth) {
+function RegistrantController($scope, $location, OAuth, Config) {
 
     var data = $location.search();
     
-    var printOnServer = true;
-    var performCropAndResize = true;
     var resetPrinter = false;
-    $scope.confOfficerUI=false;
+    $scope.confOfficerUI=Config.isConfOfficerUI();
     
     OAuth.getRegistrant(data.server_id, data.event_id, data.registrant_id, function (registrant) {
         if ((registrant === undefined) || (registrant=="")) {
@@ -199,7 +234,7 @@ function RegistrantController($scope, $location, OAuth) {
     };
 
     function cropAndResize(image,options,callback) {
-        if (performCropAndResize) {
+        if (Config.isCropAndResizeEnabled()) {
             var zoomFactor = 1;
             var sourceX = -180;
             var sourceY = -30;
@@ -235,7 +270,7 @@ function RegistrantController($scope, $location, OAuth) {
     };
     
     $scope.takePicture = function($event) {
-        if (performCropAndResize) {
+        if (Config.isCropAndResizeEnabled()) {
             var options = {
                 quality: 85,
                 targetWidth: 1224,
@@ -284,7 +319,7 @@ function RegistrantController($scope, $location, OAuth) {
     };
 
     $scope.printBadge = function($event) {
-        if (printOnServer) {
+        if (!Config.isAirPrintEnabled()) {
             OAuth.remotePrintBadge(data.server_id, data.event_id, data.registrant_id, function (result) {
                 alert(result);
             });

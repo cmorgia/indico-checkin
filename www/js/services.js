@@ -15,7 +15,138 @@
  * along with Indico check-in; if not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('Checkinapp.services', []).service('OAuth', function () {
+var module = angular.module('Checkinapp.services', []);
+
+module.service('Config',function() {
+    var simplifiedUI = isSimplifiedUI();
+    var confOfficerUI = isConfOfficerUI();
+    var airPrint = isAirPrintEnabled();
+    var cropAndResize = isCropAndResizeEnabled();
+
+    function reset() {
+        if (localStorage.getItem('simplifiedUI')===null) {
+            fullUI();
+        }
+
+        if (localStorage.getItem('confOfficerUI')===null) {
+            setConfOfficerUI(false);
+        }
+
+        if (localStorage.getItem('airPrint')===null) {
+            disableAirPrint();
+        }
+
+        if (localStorage.getItem('cropAndResize')===null) {
+            enableCropAndResize();
+        }        
+    }
+
+    function isSimplifiedUI() {
+        simplifiedUI = JSON.parse(localStorage.getItem('simplifiedUI'));
+        return simplifiedUI;
+    }
+
+    function setSimplifiedUI(val) {
+        simplifiedUI = val;
+        localStorage.setItem('simplifiedUI',JSON.stringify(simplifiedUI));
+    }
+
+    function simplifyUI() {
+        setSimplifiedUI(true);
+    }
+
+    function fullUI() {
+        setSimplifiedUI(false);
+    }
+
+    function toggleSimplifiedUI() {
+        setSimplifiedUI(!simplifiedUI);
+    }
+
+    function isConfOfficerUI() {
+        confOfficerUI = JSON.parse(localStorage.getItem('confOfficerUI'));
+        return confOfficerUI;
+    }
+
+    function setConfOfficerUI(val) {
+        confOfficerUI = val;
+        localStorage.setItem('confOfficerUI',JSON.stringify(confOfficerUI));
+    }
+
+    function toggleConfOfficerUI() {
+        setConfOfficerUI(!confOfficerUI);
+    }
+
+    function isAirPrintEnabled() {
+        airPrint = JSON.parse(localStorage.getItem('airPrint'));
+        return airPrint;
+    }
+
+    function setAirPrint(val) {
+        airPrint = val;
+        localStorage.setItem('airPrint',JSON.stringify(airPrint));
+    }
+
+    function enableAirPrint() {
+        setAirPrint(true);
+    }
+
+    function disableAirPrint() {
+        setAirPrint(false);
+    }
+
+    function toggleAirPrintEnabled() {
+        setAirPrint(!airPrint);
+    }
+
+    function isCropAndResizeEnabled() {
+        cropAndResize = JSON.parse(localStorage.getItem('cropAndResize'));
+        return cropAndResize;
+    }
+
+    function setCropAndResize(val) {
+        cropAndResize = val;
+        localStorage.setItem('cropAndResize',JSON.stringify(cropAndResize));
+    }
+
+    function enableCropAndResize() {
+        setCropAndResize(true);
+    }
+
+    function disableCropAndResize() {
+        setCropAndResize(false);
+    }
+
+    function toggleCropAndResizeEnabled() {
+        setCropAndResize(!cropAndResize);
+    }
+
+    reset();
+    
+    return {
+        isSimplifiedUI: isSimplifiedUI,
+        setSimplifiedUI: setSimplifiedUI,
+        simplifyUI: simplifyUI,
+        fullUI: fullUI,
+        toggleSimplifiedUI: toggleSimplifiedUI,
+        isConfOfficerUI: isConfOfficerUI,
+        setConfOfficerUI: setConfOfficerUI,
+        toggleConfOfficerUI: toggleConfOfficerUI,
+        isAirPrintEnabled: isAirPrintEnabled,
+        setAirPrint: setAirPrint,
+        enableAirPrint: enableAirPrint,
+        disableAirPrint: disableAirPrint,
+        toggleAirPrintEnabled: toggleAirPrintEnabled,
+        isCropAndResizeEnabled: isCropAndResizeEnabled,
+        setCropAndResize: setCropAndResize,
+        enableCropAndResize: enableCropAndResize,
+        disableCropAndResize: disableCropAndResize,
+        toggleCropAndResizeEnabled: toggleCropAndResizeEnabled,
+        reset: reset
+    }
+});
+
+module.service('OAuth', function () {
 
     var user = null;
     var OAuthClients = {};
@@ -339,7 +470,7 @@ angular.module('Checkinapp.services', []).service('OAuth', function () {
     function remotePrintBadge(server_id, event_id, registrant_id, callback) {
         getOAuthClient(server_id).post(getServer(server_id).baseUrl +
                       '/event/' + event_id +
-                      '/manage/registration/users/' + registrant_id + '/mobilePrintBadge',
+                      '/manage/registration/users/' + registrant_id + '/printbadge?base64=true',
             {
                 "confId": event_id,
                 "registrantId": registrant_id,
@@ -360,7 +491,7 @@ angular.module('Checkinapp.services', []).service('OAuth', function () {
     function getBadge(server_id, event_id, registrant_id, callback) {
         getOAuthClient(server_id).get(getServer(server_id).baseUrl +
                       '/event/' + event_id +
-                      '/manage/registration/users/' + registrant_id + '/printbadge?base64=true',
+                      '/manage/registration/users/' + registrant_id + '/mobilePrintBadge',
             function (data) {
                 if (data.text=="") {
                     showAlert("Error", "Unable to retrieve the badge", function() {});
