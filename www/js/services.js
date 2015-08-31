@@ -341,7 +341,7 @@ module.service('OAuth', function () {
 
     function getTodaysEvents(server_id, callback) {
         getOAuthClient(server_id).getJSON(getServer(server_id).baseUrl +
-                      '/export/categ/0.json?from=today&to=today&detail=mobile',
+                      '/export/categ/0.json?from=today&to=today&detail=mobile&nc=yes',
             function (data) {
                 callback(data.results);
             },
