@@ -24,21 +24,10 @@ module.service('Config',function() {
     var cropAndResize = isCropAndResizeEnabled();
 
     function reset() {
-        if (localStorage.getItem('simplifiedUI')===null) {
-            fullUI();
-        }
-
-        if (localStorage.getItem('confOfficerUI')===null) {
-            setConfOfficerUI(false);
-        }
-
-        if (localStorage.getItem('airPrint')===null) {
-            disableAirPrint();
-        }
-
-        if (localStorage.getItem('cropAndResize')===null) {
-            enableCropAndResize();
-        }        
+        fullUI();
+        setConfOfficerUI(false);
+        disableAirPrint();
+        enableCropAndResize();        
     }
 
     function isSimplifiedUI() {
