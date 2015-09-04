@@ -22,12 +22,24 @@ module.service('Config',function() {
     var confOfficerUI = isConfOfficerUI();
     var airPrint = isAirPrintEnabled();
     var cropAndResize = isCropAndResizeEnabled();
+    var defaultPrinter = getDefaultPrinter();
 
     function reset() {
         fullUI();
         setConfOfficerUI(false);
         disableAirPrint();
-        enableCropAndResize();        
+        enableCropAndResize();
+        setDefaultPrinter('server');        
+    }
+
+    function getDefaultPrinter() {
+        defaultPrinter = JSON.parse(localStorage.getItem('defaultPrinter'));
+        return defaultPrinter;
+    }
+
+    function setDefaultPrinter(val) {
+        defaultPrinter = val;
+        localStorage.setItem('defaultPrinter',JSON.stringify(defaultPrinter));
     }
 
     function isSimplifiedUI() {
@@ -131,11 +143,13 @@ module.service('Config',function() {
         enableCropAndResize: enableCropAndResize,
         disableCropAndResize: disableCropAndResize,
         toggleCropAndResizeEnabled: toggleCropAndResizeEnabled,
+        getDefaultPrinter: getDefaultPrinter,
+        setDefaultPrinter: setDefaultPrinter,
         reset: reset
     }
 });
 
-module.service('OAuth', function () {
+module.service('OAuth',['Config', function (Config) {
 
     var user = null;
     var OAuthClients = {};
@@ -344,6 +358,21 @@ module.service('OAuth', function () {
         );
     }
 
+    function listPrinters(server_id, callback) {
+        getOAuthClient(server_id).getJSON(getServer(server_id).baseUrl +
+                      '/printers',
+            function (data) {
+                callback(data);
+            },
+            function (data) {
+                checkOAuthError(data, function () {
+                    authenticate(server_id, function () {
+                        listPrinters(server_id, callback);
+                    });
+                });
+            }
+        );
+    }
 
     function getRegistrant(server_id, event_id, registrant_id, callback) {
         var event = getEvent(server_id,event_id);
@@ -457,15 +486,16 @@ module.service('OAuth', function () {
     }
 
     function remotePrintBadge(server_id, event_id, registrant_id, callback) {
+        var printer = Config.getDefaultPrinter();
         getOAuthClient(server_id).post(getServer(server_id).baseUrl +
                       '/event/' + event_id +
-                      '/manage/registration/users/' + registrant_id + '/printbadge?base64=true',
+                      '/manage/registration/users/' + registrant_id + '/printbadge?base64=true&ismobile=true&printer='+printer,
             {
                 "confId": event_id,
                 "registrantId": registrant_id,
             },
             function (msg) {
-                callback(msg);
+                callback(msg.text);
             },
             function (data) {
                 checkOAuthError(data, function () {
@@ -517,10 +547,12 @@ module.service('OAuth', function () {
         authenticate: authenticate,
         addEvent: addEvent,
         addServer: addServer,
+        getServers: getServers,
         deleteEvent: deleteEvent,
         getEvents: getEvents,
         getEvent: getEvent,
         getRegistrantsForEvent: getRegistrantsForEvent,
+        listPrinters: listPrinters,
         getRegistrant: getRegistrant,
         checkIn: checkIn,
         updatePicture: updatePicture,
@@ -532,4 +564,4 @@ module.service('OAuth', function () {
             return user;
         }
     };
-});
+}]);

@@ -42,6 +42,16 @@
                             <input type="checkbox" ng-model="performCropAndResize" ng-change="toggleCropAndResize()">
                         </td>
                     </tr>
+                    <tr>
+                        <th>Printer</th>
+                        <td>
+                            <select ng-model="printerSelected" ng-change="togglePrinter()" 
+                                    ng-options="printer for printer in printers"></select>
+                            <a ng-click="refreshListPrinters()" style="float: right; margin-top: 6px;">
+                                <span class="glyphicon glyphicon-refresh"></span>
+                            </a>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>

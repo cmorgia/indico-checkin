@@ -105,11 +105,27 @@ function NavigationController($rootScope, $scope, $location, OAuth, Config) {
 
 }
 
-function ConfigController($scope, $location, Config) {
+function ConfigController($scope, $location, Config, OAuth) {
     $scope.simplifiedUI = Config.isSimplifiedUI();
     $scope.confOfficerUI = Config.isConfOfficerUI();
     $scope.airPrint = Config.isAirPrintEnabled();
     $scope.performCropAndResize = Config.isCropAndResizeEnabled();
+    $scope.printerSelected = 'server';
+    $scope.printers = ['server'];
+
+    $scope.refreshListPrinters = function() {
+        var servers = OAuth.getServers();
+        var server_id = Object.keys(servers)[0];
+        if (server_id==undefined) {
+            alert('Please configure with server before');
+        } else {
+            OAuth.listPrinters(server_id,function(data){
+                data.push('server');
+                $scope.printers = data;
+                $scope.$apply();
+            });
+        }
+    };
 
     $scope.toggleSimplifiedUI = function() {
         Config.toggleSimplifiedUI();
@@ -129,6 +145,10 @@ function ConfigController($scope, $location, Config) {
     $scope.toggleCropAndResize = function() {
         Config.toggleCropAndResizeEnabled();
         $scope.performCropAndResize = Config.isCropAndResizeEnabled();
+    };
+
+    $scope.togglePrinter = function() {
+        Config.setDefaultPrinter($scope.printerSelected);
     };
 
     $scope.reset = function() {
@@ -321,7 +341,7 @@ function RegistrantController($scope, $location, OAuth, Config) {
     $scope.printBadge = function($event) {
         if (!Config.isAirPrintEnabled()) {
             OAuth.remotePrintBadge(data.server_id, data.event_id, data.registrant_id, function (result) {
-                alert(result);
+                showAlert("",result,function(){});
             });
         } else {
             OAuth.getBadge(data.server_id, data.event_id, data.registrant_id, function (pdf) {
