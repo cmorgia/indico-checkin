@@ -238,7 +238,7 @@ function RegistrantController($scope, $location, OAuth, Config) {
             if (evt.hasOwnProperty("session_id")) {
                 $scope.confOfficerUI = true
             }
-            registrant.personal_data.picture = registrant.personal_data.picture+"?ts="+ new Date().getTime();
+            registrant.pictureURL = registrant.pictureURL+"?ts="+ new Date().getTime();
             $scope.registrant = registrant;
         }
         $scope.$apply();
@@ -318,9 +318,9 @@ function RegistrantController($scope, $location, OAuth, Config) {
                                 if (result.status=="false") {
                                     alert("Unable to upload new picture");
                                 } else {
-                                    var url = new Url($scope.registrant.personal_data.picture);
+                                    var url = new Url($scope.registrant.pictureURL);
                                     url.query.ts = new Date().getTime();
-                                    $scope.registrant.personal_data.picture = url.toString();
+                                    $scope.registrant.pictureURL = url.toString();
                                     $scope.$apply();
                                 
                                 }

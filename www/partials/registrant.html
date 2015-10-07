@@ -13,9 +13,9 @@
             </div>
             <table class="table table-condensed">
                 <tbody>
-                    <tr ng-show="registrant.personal_data.picture">
+                    <tr ng-show="registrant.pictureURL">
                         <td>
-                            <img width="225px" height="300px" src="{{registrant.personal_data.picture}}" ng-click="takePicture($event)">
+                            <img width="225px" height="300px" src="{{registrant.pictureURL}}" ng-click="takePicture($event)">
                         </td>
                         <td>
                             <div style="text-align:center" ng-click="showStatus($event)">
