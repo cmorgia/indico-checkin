@@ -9,7 +9,7 @@ anyline.mrz = {
         // see http://documentation.anyline.io/#anyline-config for config details
         // and http://documentation.anyline.io/#barcode for barcode module details
 
-        cordova.exec(onResult,onError, "AnylineSDK", "scanMRZ", ["1R1n1h8m0a8VbF8A2B0G1l4j1Aa19Z87ee3G5JdU8V1Ab22fbb75752", {
+        cordova.exec(onResult,onError, "AnylineSDK", "scanMRZ", ["01R1H8l0m8abV8F2A0B1G4l1jaA918Ze73e5GdJ8U1VbA22fbb75752", {
           "captureResolution": "1080p",
 
           "cutout": {
