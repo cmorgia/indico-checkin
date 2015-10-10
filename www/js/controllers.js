@@ -359,6 +359,13 @@ function RegistrantController($scope, $location, OAuth, Config) {
             });
         }
     };
+    
+    function convertDate(str) {
+        // yymmdd
+        var pattern = /(\d{2})(\d{2})(\d{2})/;
+        var result = str.replace(pattern,'$3/$2/20$1');
+        return result;
+    };
 
     $scope.scanmrz = function($event) {
         anyline.mrz.scan(
@@ -368,10 +375,10 @@ function RegistrantController($scope, $location, OAuth, Config) {
                     if (result.status=="false") {
                         alert("Unable to update passport info");
                     } else {
-                        $scope.registrant.personal_data.passportId = passport_info.documentNumber;
-                        $scope.registrant.personal_data.passportExpire = passport_info.expirationDate;
-                        $scope.registrant.personal_data.passportOrigin = passport_info.countryCode;
-                        $scope.registrant.personal_data.birthDate = passport_info.dayOfBirth;
+                        $scope.registrant.passportId = passport_info.documentNumber;
+                        $scope.registrant.passportExpire = convertDate(passport_info.expirationDate);
+                        $scope.registrant.passportOrigin = passport_info.countryCode;
+                        $scope.registrant.personal_data.birthDate = convertDate(passport_info.dayOfBirth);
                         $scope.registrant.personal_data.firstName = passport_info.givenNames;
                         $scope.registrant.personal_data.surname = passport_info.surNames;
                         $scope.registrant.full_name = $scope.registrant.personal_data.title+" "+passport_info.givenNames+" "+passport_info.surNames;

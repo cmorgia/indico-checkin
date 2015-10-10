@@ -382,7 +382,7 @@ module.service('OAuth',['Config', function (Config) {
         }
         getOAuthClient(server_id).getJSON(getServer(server_id).baseUrl +
                       '/export/event/' + event_id +
-                      postfix + registrant_id + '.json',
+                      postfix + registrant_id + '.json?detail=passport',
             function (data) {
                 callback(data.results);
             },

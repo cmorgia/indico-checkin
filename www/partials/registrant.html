@@ -80,14 +80,14 @@
                     <tr ng-show="registrant.paid">
                         <th>Paid</th><td>{{registrant.paid && 'Yes' || 'No' }}</td>
                     </tr> -->
-                    <tr ng-show="registrant.personal_data.passportExpire">
-                        <th>Passport expiration</th><td>{{registrant.personal_data.passportExpire}}</td>
+                    <tr ng-show="registrant.passportExpire">
+                        <th>Passport expiration</th><td>{{registrant.passportExpire}}</td>
                     </tr>
-                    <tr ng-show="registrant.personal_data.passportOrigin">
-                        <th>Passport country</th><td>{{registrant.personal_data.passportOrigin}}</td>
+                    <tr ng-show="registrant.passportOrigin">
+                        <th>Passport country</th><td>{{registrant.passportOrigin}}</td>
                     </tr>
-                    <tr ng-show="registrant.personal_data.passportId">
-                        <th>Passport number</th><td>{{registrant.personal_data.passportId}}</td>
+                    <tr ng-show="registrant.passportId">
+                        <th>Passport number</th><td>{{registrant.passportId}}</td>
                     </tr>
                 </tbody>
             </table>
