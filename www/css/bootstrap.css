@@ -4790,7 +4790,7 @@ a.list-group-item-danger.active:focus {
   border-bottom-left-radius: 3px;
 }
 .panel > .list-group {
-  margin-bottom: 0;
+  margin-bottom: 50px;
 }
 .panel > .list-group .list-group-item {
   border-width: 1px 0;
