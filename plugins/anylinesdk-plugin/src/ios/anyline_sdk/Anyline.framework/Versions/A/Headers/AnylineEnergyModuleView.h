@@ -12,7 +12,8 @@ typedef NS_ENUM(NSInteger, ALScanMode) {
     ALElectricMeter,
     ALGasMeter,
     ALBarcode,
-//    ALSerialNumber,
+    ALSerialNumber, // beta
+    ALWaterMeter, // alpha
 };
 
 @protocol AnylineEnergyModuleDelegate;

@@ -3,7 +3,7 @@
     xmlns="http://apache.org/cordova/ns/plugins/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android"
     id="io.anyline.cordova"
-    version="3.1-alpha1">
+    version="3.2-alpha1">
 
   <name>AnylineSDK</name>
   <platform name="ios">
@@ -46,7 +46,6 @@
   </platform>
   <platform name="android">
 <!-- register plugin -->
-    <resource-file  src="src/android/anyline_sdk/libs/AnylineSDK.aar" target="libs/AnylineSDK.aar"/>
     <framework  custom="true" src="src/android/anyline.gradle" type="gradleReference"/>
 
     <config-file parent="/*" target="config.xml">

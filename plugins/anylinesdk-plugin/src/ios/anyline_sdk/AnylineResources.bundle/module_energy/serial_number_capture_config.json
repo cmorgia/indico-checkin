@@ -1,0 +1,29 @@
+{
+    "captureResolution":"1080p",
+    "cutout" : {
+        "style": "rect",
+        "width": 720,
+        "alignment": "top_half",
+        "ratioFromSize" : {
+            "width": 720,
+            "height": 131
+        },
+        "offset": {
+            "x": 0,
+            "y": -30
+        },
+        "strokeWidth": 2,
+        "strokeColor": "FFFFFF",
+        "cornerRadius": 3,
+        "outerColor": "000000",
+        "outerAlpha": 0.3
+    },
+    "flash" : {
+        "mode" : "manual",
+        "alignment" : "top_left"
+    },
+    "beepOnResult": false,
+    "vibrateOnResult": true,
+    "blinkAnimationOnResult": true,
+    "cancelOnResult": true
+}

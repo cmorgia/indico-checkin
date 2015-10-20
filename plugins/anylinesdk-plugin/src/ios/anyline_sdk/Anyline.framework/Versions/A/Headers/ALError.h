@@ -30,6 +30,7 @@ enum ALErrorCodes {
     
     //License Exception
     ALLicenseKeyInvalid = 3001,
+    ALLicenseNotValidForFunction = 3002,
     
     //Argument Exceptions
     ALArgumentIsNull = 4001,

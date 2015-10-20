@@ -33,20 +33,21 @@
 - (void)anylineMRZModuleView:(AnylineMRZModuleView *)anylineMRZModuleView
            didFindScanResult:(ALIdentification *)scanResult
                      atImage:(UIImage *)image {
+    
     NSMutableDictionary *scanResultDict = [[scanResult dictionaryWithValuesForKeys:@[@"documentType",
-                                                                                    @"countryCode",
-                                                                                    @"surNames",
-                                                                                    @"givenNames",
-                                                                                    @"documentNumber",
-                                                                                    @"checkdigitNumber",
-                                                                                    @"dayOfBirth",
-                                                                                    @"checkdigitDayOfBirth",
-                                                                                    @"sex",
-                                                                                    @"expirationDate",
-                                                                                    @"checkdigitExpirationDate",
-                                                                                    @"personalNumber",
-                                                                                    @"checkDigitPersonalNumber",
-                                                                                    @"checkdigitFinal"]] mutableCopy];
+                                                                                     @"countryCode",
+                                                                                     @"surNames",
+                                                                                     @"givenNames",
+                                                                                     @"documentNumber",
+                                                                                     @"checkdigitNumber",
+                                                                                     @"dayOfBirth",
+                                                                                     @"checkdigitDayOfBirth",
+                                                                                     @"sex",
+                                                                                     @"expirationDate",
+                                                                                     @"checkdigitExpirationDate",
+                                                                                     @"personalNumber",
+                                                                                     @"checkDigitPersonalNumber",
+                                                                                     @"checkdigitFinal"]] mutableCopy];
     self.scannedLabel.text = scanResultDict.description;
     
     NSString *imagePath = [self saveImageToFileSystem:image];
