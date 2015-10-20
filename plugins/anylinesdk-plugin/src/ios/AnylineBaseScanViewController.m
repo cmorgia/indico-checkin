@@ -28,7 +28,7 @@
         [self.doneButton setTitle:NSLocalizedString(@"done", @"scanning done")
                          forState:UIControlStateNormal];
         self.doneButton.frame = CGRectMake(0, 0, 100,44);
-        self.doneButton.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height-80);
+        self.doneButton.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height-44);
         [self.doneButton addTarget:self action:@selector(doneButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:self.doneButton];
         
@@ -40,7 +40,7 @@
         self.scannedLabel.textColor = [UIColor whiteColor];
         self.scannedLabel.textAlignment = NSTextAlignmentCenter;
         
-        [self.view addSubview:self.scannedLabel];
+        //[self.view addSubview:self.scannedLabel];
     });
     
 }
@@ -64,6 +64,7 @@
 }
 
 - (void)doneButtonPressed:(id)sender {
+    [self.moduleView cancelScanningAndReturnError:nil];
     [self dismissViewControllerAnimated:YES completion:^{
         
     }];
@@ -76,10 +77,11 @@
     NSData *binaryImageData = UIImageJPEGRepresentation(image, 0.9);
     NSString *uuid = [NSUUID UUID].UUIDString;
     NSString *imagePath = [NSString stringWithFormat:@"%@.jpg",uuid];
-    imagePath = [basePath stringByAppendingPathComponent:imagePath];
-    [binaryImageData writeToFile:imagePath atomically:YES];
     
-    return imagePath;
+    NSString *fullPath = [basePath stringByAppendingPathComponent:imagePath];
+    [binaryImageData writeToFile:fullPath atomically:YES];
+    
+    return fullPath;
 }
 
 @end
