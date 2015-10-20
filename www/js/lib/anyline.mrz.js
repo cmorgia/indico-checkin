@@ -9,7 +9,8 @@ anyline.mrz = {
         // see http://documentation.anyline.io/#anyline-config for config details
         // and http://documentation.anyline.io/#barcode for barcode module details
 
-        cordova.exec(onResult,onError, "AnylineSDK", "scanMRZ", ["01R1H8l0m8abV8F2A0B1G4l1jaA918Ze73e5GdJ8U1VbA22fbb75752", {
+        cordova.exec(onResult,onError, "AnylineSDK", "scanMRZ", [
+          "eyJzY29wZSI6Ik1SWiIsInBsYXRmb3JtIjpbImlPUyIsIkFuZHJvaWQiXSwidmFsaWQiOiIyMDE2LTEwLTIwIiwibWFqb3JWZXJzaW9uIjoiMyIsImlzQ29tbWVyY2lhbCI6dHJ1ZSwidG9sZXJhbmNlRGF5cyI6NjAsImlvc0lkZW50aWZpZXIiOlsiY2gudW5vZy5pbmRpY28uY2hlY2tpbiJdLCJhbmRyb2lkSWRlbnRpZmllciI6WyJjaC51bm9nLmluZGljby5jaGVja2luIl19CnpvT1BoQlJmcEhnU3VRUWVLRXVmK203N3FtTjZuendZM0k4SGhlUFRwbDlWQ0FqZEhSRlBnbld3bmJTYlloRmwzSDV2NHovS1Y0c0tvdDFpWm8rUlRlcm5kRmZ5ZEpTK29KMHVuRXl0akh5U3o0alhsRE9yNmVBNWFldGxwS0lNZzUrQVorWUJzcyttZkFkK2ZYcTNidVZjcnVSNi9SOXN0VHR0YmJ0dUF1S21LK2ZBQ3lZbHppcDlxa3FIOWtJVzlwWGd3cnYxNThWQnljbzFSUW5UR1dURWRqbGpXQjdJREtZdDdSdGtGV1VjdG1GMmRiWUpkTi9wVXUxMm5oY0dsYmhxMTdhbGRZTmZWRkVqZHMwUDJidEhHYWFpVlhnWXFQMjl0VmlFREVndlJMQzU1ZFBrbWhQUXFUODR4VGlTMlNxNkZGSXQ1UE1aVnlYVWlNTEdDUT09", {
           "captureResolution": "1080p",
 
           "cutout": {
