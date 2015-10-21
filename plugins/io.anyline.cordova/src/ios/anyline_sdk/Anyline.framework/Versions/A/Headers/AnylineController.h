@@ -42,22 +42,26 @@
  *  correctly run Anyline you will have to set the AnylineController delegate 
  *  and load an appropriate configuration.
  *
- *  @param licenseKey The license key you purchased for Anyline.
+ *  @param licenseKey       The license key you purchased for Anyline.
+ *  @param moduleIdentifier A string identifying the module (e.g MRZ)
  *
  *  @return A new instance of AnylineController.
  */
-- (instancetype)initWithLicenseKey:(NSString *)licenseKey;
+- (instancetype)initWithLicenseKey:(NSString *)licenseKey
+                  moduleIdentifier:(NSString *)moduleIdentifier;
 
 /**
  *  Initializes a new AnylineController with a license key and delegate. In order 
  *  to correctly run Anyline you will have to load an appropriate configuration.
  *
- *  @param licenseKey The license key you purchased for Anyline.
- *  @param delegate   The delegate where for the Anyline callbacks.
+ *  @param licenseKey       The license key you purchased for Anyline.
+ *  @param moduleIdentifier A string identifying the module (e.g MRZ)
+ *  @param delegate         The delegate where for the Anyline callbacks.
  *
  *  @return A new instance of AnylineController.
  */
 - (instancetype)initWithLicenseKey:(NSString *)licenseKey
+                  moduleIdentifier:(NSString *)moduleIdentifier
                           delegate:(id<AnylineControllerDelegate>)delegate;
 
 /**

@@ -1,19 +1,17 @@
 repositories{
-  jcenter()
-  flatDir{
-      dirs 'libs'
-   }
+    jcenter()
+    maven { url 'https://anylinesdk.blob.core.windows.net/maven/'}
 }
 
 dependencies {
-   compile(name:'AnylineSDK', ext:'aar')
+    compile 'io.anyline:anylinesdk:3.2.0-RC4@aar'
 }
 
 android {
 
   defaultConfig {
     minSdkVersion 15
-    targetSdkVersion 21
+    targetSdkVersion 22
   }
 
   compileOptions {
