@@ -376,6 +376,9 @@ module.service('OAuth',['Config', function (Config) {
 
     function getRegistrant(server_id, event_id, registrant_id, callback) {
         var event = getEvent(server_id,event_id);
+        if (event==undefined) {
+            callback(undefined);
+        }
         var postfix = '/registrant/';
         if (event.hasOwnProperty('session_id')) {
             postfix = '/session/'+event.session_id+postfix;
