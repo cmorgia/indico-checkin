@@ -256,12 +256,12 @@ function RegistrantController($scope, $location, OAuth, Config) {
     function cropAndResize(image,options,callback) {
         if (Config.isCropAndResizeEnabled()) {
             var zoomFactor = 1;
-            var sourceX = -180;
-            var sourceY = -30;
+            var sourceX = -240;
+            var sourceY = -120;
             var sourceWidth = options.targetWidth;
             var sourceHeight = options.targetHeight;
-            var destWidth = 225*zoomFactor;
-            var destHeight = 300*zoomFactor;
+            var destWidth = 300*zoomFactor;
+            var destHeight = 360*zoomFactor;
             var destX = 150;
             var destY = 300;
 

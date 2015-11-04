@@ -2,6 +2,7 @@ platforms/*
 plugins/*
 !plugins/io.anyline.cordova
 !plugins/anylinesdk-plugin
+!plugins/com.performanceactive.plugins.camera 
 merges/*
 .DS_Store
 
