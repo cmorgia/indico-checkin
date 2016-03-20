@@ -36,7 +36,7 @@ function NavigationController($rootScope, $scope, $location, OAuth, Config) {
                 var event = events[i];
                 event.server=$scope.server;
                 OAuth.addEvent(event, function () {
-                    console.log("Event "+event.id+" successfully added");
+                    console.log("Event "+event.event_id+" successfully added");
                 });
             }
             $location.path('events');
@@ -51,10 +51,9 @@ function NavigationController($rootScope, $scope, $location, OAuth, Config) {
     $scope.scan = function () {
         scanQRCode(function (data) {
             // removed the check for an existing event (UNOG Security use case)
-            $location.path('registrant').search({"registrant_id": data.registrant_id,
-                                                 "event_id": data.event_id,
-                                                 "server_id": data.server_url.hashCode(),
-                                                 "checkin_secret": data.checkin_secret,
+            $location.path('registrant').search({"registrant_id": data.r,
+                                                 "event_id": data.e,
+                                                 "server_id": $scope.server.baseUrl.hashCode(),
                                                  "ts": Math.random()
                                              });
             $scope.$apply();
@@ -364,6 +363,7 @@ function RegistrantController($scope, $location, OAuth, Config) {
         anyline.mrz.scan(
             function(passport_info){
                 console.log(passport_info);
+                delete passport_info["allCheckDigitsValid"];
                 OAuth.updatePassport(data.server_id, data.event_id, data.registrant_id, data.checkin_secret, passport_info, function (result) {
                     if (result.status=="false") {
                         alert("Unable to update passport info");

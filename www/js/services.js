@@ -207,7 +207,7 @@ module.service('OAuth',['Config', function (Config) {
     // If the new location is the callback url extract verifier from it and
     // get the access token.
     function oauthLocationChanged(url, oauthClient, server_id, onSuccess) {
-        if (url.indexOf(getServer(server_id)['callbackUrl'] + '/?') >= 0) {
+        if (url.indexOf(getServer(server_id)['callbackUrl'] + '?') >= 0) {
             oauthWindow.close();
             // Extract oauth_verifier from the callback call
             verifier = (/[?|&]oauth_verifier=([^&;]+?)(&|#|;|$)/g).exec(url)[1];
@@ -243,7 +243,7 @@ module.service('OAuth',['Config', function (Config) {
         var servers = getServers();
         var server = server_data;
         var server_id = server.baseUrl.hashCode();
-        server.callbackUrl = 'http://callback.check';
+        server.callbackUrl = server.baseUrl + '/noop';
         server.requestTokenUrl = server.baseUrl + '/oauth/request_token';
         server.authorizationUrl = server.baseUrl + '/oauth/authorize';
         server.accessTokenUrl = server.baseUrl + '/oauth/access_token';

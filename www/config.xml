@@ -69,4 +69,5 @@
         <param name="ios-package" value="AnylineSDKPlugin" />
         <param name="id" value="io.anyline.cordova" />
     </feature>
+    <access origin="*"/>
 </widget>
