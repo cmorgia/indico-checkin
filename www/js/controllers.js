@@ -359,6 +359,19 @@ function RegistrantController($scope, $location, OAuth, Config) {
         }
     };
 
+    function formatDate(shortDate,adjust) {
+        var year = parseInt(shortDate.substring(0,2));
+        var month = shortDate.substring(2,4);
+        var day = shortDate.substring(4,6);
+        if (adjust && year>=16) {
+            year += 1900;
+        } else {
+            year += 2000;
+        }
+
+        return ""+day+"/"+month+"/"+year;
+    }
+
     $scope.scanmrz = function($event) {
         anyline.mrz.scan(
             function(passport_info){
@@ -368,6 +381,9 @@ function RegistrantController($scope, $location, OAuth, Config) {
                     if (result.status=="false") {
                         alert("Unable to update passport info");
                     } else {
+                        passport_info.dayOfBirth = formatDate(passport_info.dayOfBirth,true);
+                        passport_info.expirationDate = formatDate(passport_info.expirationDate,false);
+
                         $scope.registrant.personal_data.passportId = passport_info.documentNumber;
                         $scope.registrant.personal_data.passportExpire = passport_info.expirationDate;
                         $scope.registrant.personal_data.passportOrigin = passport_info.countryCode;
