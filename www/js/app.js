@@ -42,7 +42,7 @@ var app = {
 
 angular.module('Checkinapp', ['ngTouch', 'ngRoute', 'ui.bootstrap', 'Checkinapp.services']).
     config(function ($routeProvider) {
-
+    console.log("Configuration");
     $routeProvider.
         when('/', {
             templateUrl: 'partials/events.html',

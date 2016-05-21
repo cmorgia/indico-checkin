@@ -17,11 +17,11 @@
 
 function NavigationController($rootScope, $scope, $location, OAuth, Config) {
     function scanQRCode(callback) {
-        cordova.plugins.barcodeScanner.scan(
+        anyline.qrcode.scan(
             function (result) {
                 if (!result.cancelled) {
                     // The timeout has to be set for IOS because will not work properly
-                    callback(JSON.parse(result.text));
+                    callback(JSON.parse(result.value));
                 }
             },
             function (error) {
