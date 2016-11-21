@@ -542,8 +542,10 @@ module.service('OAuth',['Config', function (Config) {
 
     // In case of failure print error message
     function failure(data) {
-        parsedData = JSON.parse(data.text);
-        showAlert("Error", parsedData.message, function() {});
+        console.log("ERROR:" + JSON.stringify(data));
+        //parsedData = JSON.parse(data.text);
+        //showAlert("Error", parsedData.message, function() {});
+        alert(JSON.stringify(data));
     }
 
     return {

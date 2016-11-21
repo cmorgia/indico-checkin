@@ -16,7 +16,10 @@
  */
 
 function NavigationController($rootScope, $scope, $location, OAuth, Config) {
-    function scanQRCode(callback) {
+
+
+
+    function scanAnyline(callback) {
         anyline.qrcode.scan(
             function (result) {
                 if (!result.cancelled) {
@@ -28,6 +31,43 @@ function NavigationController($rootScope, $scope, $location, OAuth, Config) {
                 showAlert("Error scanning", error, function () {});
             }
         );
+    };
+
+    function scanCordova(callback) {
+        cordova.plugins.barcodeScanner.scan(
+            function (result) {
+                if (!result.cancelled) {
+                    // The timeout has to be set for IOS because will not work properly
+                    console.log(result.text);
+                    callback(JSON.parse(result.text));
+
+                }
+            },
+            function (error) {
+                showAlert("Error scanning", error, function () {});
+            },
+            {
+              "preferFrontCamera" : false, // iOS and Android
+              "showFlipCameraButton" : false, // iOS and Android
+              "prompt" : "Place a barcode inside the scan area", // supported on Android only
+              "formats" : "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
+              "orientation" : "portrait" // Android only (portrait|landscape), default unset so it rotates with the device
+            }
+       );
+    };
+
+    function scanFake(callback) {
+        //text = '{"consumerKey": "EvnJtKEn9FsuwbzZvBBz0mjwnhxeM2E9gWrc36CV", "baseUrl": "http://reg.unog.ch", "consumerSecret": "NjQKTQcMVGI3wb8pKGDNbcHFPifI3Tx42tND8UQn"}'
+        text = '{"consumerKey": "EvnJtKEn9FsuwbzZvBBz0mjwnhxeM2E9gWrc36CV", "baseUrl": "http://10.0.9.86", "consumerSecret": "NjQKTQcMVGI3wb8pKGDNbcHFPifI3Tx42tND8UQn"}'
+
+        callback(JSON.parse(text));
+    }
+
+
+    function scanQRCode(callback) {
+        //scanAnyline(callback);
+        //scanCordova(callback);
+        scanFake(callback)
     };
 
     $scope.fetchTodaysEvents = function () {

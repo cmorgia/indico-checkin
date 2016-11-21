@@ -338,6 +338,8 @@ exports.OAuth = (function (global) {
                 success = options.success || function () {};
                 failure = options.failure || function () {};
 
+                console.log(method + " | " +url+ " | " +JSON.stringify(data)+ " | " +JSON.stringify(headers));
+
                 // According to the spec
                 withFile = (function(){
                     var hasFile = false;
@@ -393,6 +395,7 @@ exports.OAuth = (function (global) {
                             success(responseObject);
                         // everything what is 400 and above is a failure code
                         } else if(xhr.status >= 400 && xhr.status !== 0) {
+                            console.log("RESPONSE OBJ="+JSON.stringify(responseObject));
                             failure(responseObject);
                         }
                     }
@@ -481,6 +484,8 @@ exports.OAuth = (function (global) {
                     xhr.setRequestHeader(i, headers[i]);
                 }
 
+                console.log(" QUERY FOR OAUTH TOKEN="+ JSON.stringify(query));
+
                 xhr.send(query);
             };
 
@@ -495,6 +500,7 @@ exports.OAuth = (function (global) {
          * @param failure {function} callback for a failed request
          */
         get: function (url, success, failure) {
+            console.log(" URL= " + url);
             this.request({'url': url, 'success': success, 'failure': failure});
         },
 
@@ -573,10 +579,12 @@ exports.OAuth = (function (global) {
         fetchRequestToken: function (success, failure) {
             var oauth = this;
             oauth.setAccessToken('', '');
-
             var url = oauth.authorizationUrl;
             this.get(this.requestTokenUrl, function (data) {
                 var token = oauth.parseTokenRequest(data, data.responseHeaders['Content-Type'] || undefined);
+                console.log("DATA=" + JSON.stringify(data));
+                console.log("token=" + JSON.stringify(token));
+
                 oauth.setAccessToken([token.oauth_token, token.oauth_token_secret]);
                 success(url + '?' + data.text);
             }, failure);
