@@ -484,8 +484,6 @@ exports.OAuth = (function (global) {
                     xhr.setRequestHeader(i, headers[i]);
                 }
 
-                console.log(" QUERY FOR OAUTH TOKEN="+ JSON.stringify(query));
-
                 xhr.send(query);
             };
 
