@@ -16,7 +16,7 @@
  */
 
 function NavigationController($rootScope, $scope, $location, OAuth, Config) {
-    function scanQRCode(callback) {
+    function scanAnyline(callback) {
         anyline.qrcode.scan(
             function (result) {
                 if (!result.cancelled) {
@@ -28,6 +28,48 @@ function NavigationController($rootScope, $scope, $location, OAuth, Config) {
                 showAlert("Error scanning", error, function () {});
             }
         );
+    };
+
+    function scanCordova(callback) {
+        cordova.plugins.barcodeScanner.scan(
+            function (result) {
+                if (!result.cancelled) {
+                    // The timeout has to be set for IOS because will not work properly
+                    console.log(result.text);
+                    callback(JSON.parse(result.text));
+
+                }
+            },
+            function (error) {
+                showAlert("Error scanning", error, function () {});
+            },
+            {
+              "preferFrontCamera" : false, // iOS and Android
+              "showFlipCameraButton" : false, // iOS and Android
+              "prompt" : "Place a barcode inside the scan area", // supported on Android only
+              "formats" : "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
+              "orientation" : "portrait" // Android only (portrait|landscape), default unset so it rotates with the device
+            }
+       );
+    };
+
+    function scanFake(callback) {
+        //text = '{"consumerKey": "EvnJtKEn9FsuwbzZvBBz0mjwnhxeM2E9gWrc36CV", "baseUrl": "http://reg.unog.ch", "consumerSecret": "NjQKTQcMVGI3wb8pKGDNbcHFPifI3Tx42tND8UQn"}'
+        text = '{"consumerKey": "EvnJtKEn9FsuwbzZvBBz0mjwnhxeM2E9gWrc36CV", "baseUrl": "http://10.0.16.88", "consumerSecret": "NjQKTQcMVGI3wb8pKGDNbcHFPifI3Tx42tND8UQn"}'
+
+        callback(JSON.parse(text));
+    }
+
+
+    function scanQRCode(callback) {
+        //scanAnyline(callback);
+        scanCordova(callback);
+        //scanFake(callback)
+    };
+
+    function scanQRCode_FakeRegistrant(callback) {
+        text = '{"r": "0", "e": "17563"}'
+        callback(JSON.parse(text));
     };
 
     $scope.fetchTodaysEvents = function () {
@@ -49,7 +91,10 @@ function NavigationController($rootScope, $scope, $location, OAuth, Config) {
     };
 
     $scope.scan = function () {
+        //scanQRCode_FakeRegistrant(function (data) {
         scanQRCode(function (data) {
+            console.log("SCANNING");
+            console.log("SERVER="+JSON.stringify($scope.server));
             // removed the check for an existing event (UNOG Security use case)
             $location.path('registrant').search({"registrant_id": data.r,
                                                  "event_id": data.e,
@@ -73,6 +118,7 @@ function NavigationController($rootScope, $scope, $location, OAuth, Config) {
 
     $scope.addEvent = function () {
         scanQRCode(function (data) {
+            console.log("ADD EVENT SCAN");
             if(OAuth.getEvent(data.server.baseUrl.hashCode(), data.event_id)) {
                 showAlert('Already added', "This event has been already added to the system", function () {});
                 $location.path('events');
@@ -229,6 +275,7 @@ function RegistrantController($scope, $location, OAuth, Config) {
     $scope.confOfficerUI=Config.isConfOfficerUI();
     
     OAuth.getRegistrant(data.server_id, data.event_id, data.registrant_id, function (registrant) {
+        console.log("REGISTRANT RETRIVED="+JSON.stringify(registrant));
         if ((registrant === undefined) || (registrant=="")) {
             showAlert('Error', "The registrant cannot be found or it's not approved for the session", function () {});
             $location.path('events');
@@ -239,6 +286,7 @@ function RegistrantController($scope, $location, OAuth, Config) {
             }
             registrant.personal_data.picture = registrant.personal_data.picture+"?ts="+ new Date().getTime();
             $scope.registrant = registrant;
+            data.checkin_secret = registrant.checkin_secret;
         }
         $scope.$apply();
     });

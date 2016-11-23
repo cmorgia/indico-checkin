@@ -383,13 +383,16 @@ module.service('OAuth',['Config', function (Config) {
         if (event.hasOwnProperty('session_id')) {
             postfix = '/session/'+event.session_id+postfix;
         }
+        console.log("GETTINREGISTRANT:"+getServer(server_id).baseUrl + '/export/event/' + event_id + postfix + registrant_id + '.json')
         getOAuthClient(server_id).getJSON(getServer(server_id).baseUrl +
                       '/export/event/' + event_id +
                       postfix + registrant_id + '.json',
             function (data) {
+                console.log("REGISTRANT RESULTS="+JSON.stringify(data.results))
                 callback(data.results);
             },
             function (data) {
+                console.log("ERROR GETTIN REGISTRANT="+data.text);
                 checkOAuthError(data, function () {
                     authenticate(server_id, function () {
                         getRegistrant(server_id, event_id, registrant_id, callback);
@@ -532,6 +535,7 @@ module.service('OAuth',['Config', function (Config) {
     }
 
     function checkOAuthError(data, callback) {
+        console.log(JSON.stringify(data))
         var parsedData = JSON.parse(data.text);
         if(parsedData._type == "OAuthError" && parsedData.code == 401) {
             callback();
@@ -542,8 +546,10 @@ module.service('OAuth',['Config', function (Config) {
 
     // In case of failure print error message
     function failure(data) {
-        parsedData = JSON.parse(data.text);
-        showAlert("Error", parsedData.message, function() {});
+        //parsedData = JSON.parse(data.text);
+        //showAlert("Error", parsedData.message, function() {});
+        console.log("ERROR:"+JSON.stringify(data));
+        alert(JSON.stringify(data));
     }
 
     return {

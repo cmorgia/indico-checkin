@@ -344,7 +344,9 @@ exports.OAuth = (function (global) {
                     for(var name in data) {
                         // Thanks to the FileAPI any file entry
                         // has a fileName property
-                        if(data[name] instanceof  File || typeof data[name].fileName != 'undefined') hasFile = true;
+                        //if(data[name] instanceof  File || typeof data[name].fileName != 'undefined') hasFile = true;
+                        if (data[name] instanceof  File) hasFile = true;
+                        if (data[name] != undefined && data[name].hasOwnProperty('fileName') && typeof data[name].fileName != 'undefined') hasFile = true;
                     }
 
                     return hasFile;
