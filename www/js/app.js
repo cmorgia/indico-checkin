@@ -24,6 +24,12 @@ var app = {
         document.addEventListener('deviceready', this.onDeviceReady, false);
         document.addEventListener('offline', this.checkConnection, false);
         document.addEventListener('online', this.checkConnection, false);
+        // Disable back button: it will remove server info
+        document.addEventListener("backbutton", onBackKeyDown, false);
+        function onBackKeyDown(e) {
+          e.preventDefault();
+        }
+
     },
 
     onDeviceReady: function () {

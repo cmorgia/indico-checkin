@@ -239,4 +239,7 @@ div.registrants .checked  {
 .print-button:active {
     position:relative;
     top:1px;
+    word-wrap: break-word;
 }
+
+header a, header a.visited { color: white; }

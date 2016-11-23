@@ -16,6 +16,7 @@
  */
 
 function NavigationController($rootScope, $scope, $location, OAuth, Config) {
+
     function scanAnyline(callback) {
         anyline.qrcode.scan(
             function (result) {
@@ -87,7 +88,7 @@ function NavigationController($rootScope, $scope, $location, OAuth, Config) {
     };
 
     $scope.allEvents = function () {
-        $location.path('events');
+        $location.path('events').replace();
     };
 
     $scope.scan = function () {
@@ -100,7 +101,7 @@ function NavigationController($rootScope, $scope, $location, OAuth, Config) {
                                                  "event_id": data.e,
                                                  "server_id": $scope.server.baseUrl.hashCode(),
                                                  "ts": Math.random()
-                                             });
+                                             }).replace();
             $scope.$apply();
         });
     };
@@ -137,8 +138,16 @@ function NavigationController($rootScope, $scope, $location, OAuth, Config) {
     };
 
     $scope.back = function() {
-        window.history.back();
+        if (window.history.length > 0) { window.history.back(); }
+        else { $location.path('events').replace(); }
+
     };
+
+    $scope.exitFromApp = function() {
+        navigator.app.exitApp();
+    };
+
+
 
     $scope.config = function() {
         $location.path('config');
@@ -204,7 +213,7 @@ function ConfigController($scope, $location, Config, OAuth) {
         $scope.performCropAndResize = Config.isCropAndResizeEnabled();
         localStorage.removeItem('servers');
         localStorage.removeItem('events');
-        $location.path('events');
+        $location.path('events').replace();
     };
 }
 
@@ -346,12 +355,15 @@ function RegistrantController($scope, $location, OAuth, Config) {
         } else {
             var options = {
                 quality: 85,
-                targetWidth: 225,
-                targetHeight: 300
+                //targetWidth: 225,
+                //targetHeight: 300
+                allowEdit: true,
+                targetWidth: 450,
+                targetHeight: 600
             };
         }
-        
-        navigator.customCamera.getPicture("temp.jpg", function success(fileUri) {
+
+        navigator.camera.getPicture(function success(fileUri) {
             window.resolveLocalFileSystemURL(fileUri,function(fileEntry){
                 fileEntry.file(function(file) {
                     

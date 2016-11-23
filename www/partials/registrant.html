@@ -15,19 +15,20 @@
                 <tbody>
                     <tr ng-show="registrant.personal_data.picture">
                         <td>
-                            <img width="225px" height="300px" src="{{registrant.personal_data.picture}}" ng-click="takePicture($event)">
+                            <img width="225px"  src="{{registrant.personal_data.picture}}" ng-click="takePicture($event)">
                         </td>
                         <td>
                             <div style="text-align:center" ng-click="showStatus($event)">
-                                <span class="glyphicon glyphicon-ok" ng-show="registrant.canEnter" style="font-size: 96px;color: green"></span>
-                                <span class="glyphicon glyphicon-remove" ng-show="!registrant.canEnter" style="font-size: 96px; color: red"></span>
+                                <span class="glyphicon glyphicon-ok" ng-show="registrant.canEnter" style="font-size: 60px;color: green"></span>
+                                <span class="glyphicon glyphicon-remove" ng-show="!registrant.canEnter" style="font-size: 60px; color: red"></span>
                             </div>
-                            <div class="print-button" style="margin-top: 50px" ng-click="printBadge($event)" ng-hide="confOfficerUI">Print badge</div>
-                            <div class="print-button" style="margin-top: 10px" ng-click="scanmrz($event)" ng-hide="confOfficerUI">Scan passport</div>
+                            <div class="print-button" style="margin-top: 30px" ng-click="printBadge($event)" ng-hide="confOfficerUI">Print badge</div>
+                            <div class="print-button" style="margin-top: 10px; display:none;" ng-click="scanmrz($event)" ng-hide="confOfficerUI">Scan passport</div>
                         </td>
                     </tr>
                 </tbody>
             </table>
+            <div>&nbsp;</div>
             <table class="table table-condensed">
                     <tr>
                         <th>Checked in</th>
@@ -94,3 +95,4 @@
         </div>
     </div>
 </div>
+<div style="margin:40px;"></div>

@@ -14,8 +14,15 @@
             <a ng-hide="isCurrentLocation('/')" ng-click="back()">
                 <span class="glyphicon glyphicon-chevron-left"></span>
             </a>
+
+            <a ng-show="isCurrentLocation('/')" ng-click="exitFromApp()">
+                <span class="glyphicon glyphicon-remove"></span>
+            </a>
+
+
+
             <span class="title centered" style="margin-top: 6px;">{{title}}</span>
-            <a ng-click="window.location.reload();" style="float: right; margin-top: 6px;">
+            <a onclick="window.location.reload();" style="float: right; margin-top: 6px;">
                 <span class="glyphicon glyphicon-refresh"></span>
             </a>
         </header>

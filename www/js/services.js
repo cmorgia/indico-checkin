@@ -28,8 +28,8 @@ module.service('Config',function() {
         fullUI();
         setConfOfficerUI(false);
         disableAirPrint();
-        enableCropAndResize();
-        setDefaultPrinter('server');        
+        disableCropAndResize();
+        setDefaultPrinter('server');
     }
 
     function getDefaultPrinter() {
