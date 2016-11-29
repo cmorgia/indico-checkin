@@ -25,7 +25,7 @@ module.service('Config',function() {
     var defaultPrinter = getDefaultPrinter();
 
     function reset() {
-        fullUI();
+        simplifyUI();
         setConfOfficerUI(false);
         disableAirPrint();
         disableCropAndResize();
@@ -376,6 +376,7 @@ module.service('OAuth',['Config', function (Config) {
 
     function getRegistrant(server_id, event_id, registrant_id, callback) {
         var event = getEvent(server_id,event_id);
+        console.log("---FOUND EVENT:"+JSON.stringify(event));
         if (event==undefined) {
             callback(undefined);
         }
@@ -392,12 +393,16 @@ module.service('OAuth',['Config', function (Config) {
                 callback(data.results);
             },
             function (data) {
-                console.log("ERROR GETTIN REGISTRANT="+data.text);
+                // Registrant not found
+                callback(undefined);
+
+                /*
                 checkOAuthError(data, function () {
                     authenticate(server_id, function () {
                         getRegistrant(server_id, event_id, registrant_id, callback);
                     });
                 });
+                */
             }
         );
     }
@@ -535,12 +540,14 @@ module.service('OAuth',['Config', function (Config) {
     }
 
     function checkOAuthError(data, callback) {
-        console.log(JSON.stringify(data))
-        var parsedData = JSON.parse(data.text);
+        //console.log(JSON.stringify(data));
+        //var parsedData = JSON.parse(data.text);
+        var parsedData = data;
         if(parsedData._type == "OAuthError" && parsedData.code == 401) {
             callback();
         } else {
-            showAlert("Error", parsedData.message, function() {});
+            //showAlert("Error", parsedData.message, function() {});
+            alert(data.text);
         }
     }
 

@@ -54,23 +54,23 @@ function NavigationController($rootScope, $scope, $location, OAuth, Config) {
        );
     };
 
-    function scanFake(callback) {
+    // FOR TESTING
+    function scanQRCode_FakeServer(callback) {
         //text = '{"consumerKey": "EvnJtKEn9FsuwbzZvBBz0mjwnhxeM2E9gWrc36CV", "baseUrl": "http://reg.unog.ch", "consumerSecret": "NjQKTQcMVGI3wb8pKGDNbcHFPifI3Tx42tND8UQn"}'
         text = '{"consumerKey": "EvnJtKEn9FsuwbzZvBBz0mjwnhxeM2E9gWrc36CV", "baseUrl": "http://10.0.16.88", "consumerSecret": "NjQKTQcMVGI3wb8pKGDNbcHFPifI3Tx42tND8UQn"}'
-
         callback(JSON.parse(text));
     }
+
+    // FOR TESTING
+    function scanQRCode_FakeRegistrant(callback) {
+        text = '{"r": "0", "e": "17563"}'
+        callback(JSON.parse(text));
+    };
 
 
     function scanQRCode(callback) {
         //scanAnyline(callback);
         scanCordova(callback);
-        //scanFake(callback)
-    };
-
-    function scanQRCode_FakeRegistrant(callback) {
-        text = '{"r": "0", "e": "17563"}'
-        callback(JSON.parse(text));
     };
 
     $scope.fetchTodaysEvents = function () {
@@ -87,6 +87,8 @@ function NavigationController($rootScope, $scope, $location, OAuth, Config) {
         });
     };
 
+    $scope.platform = cordova.platformId;
+
     $scope.allEvents = function () {
         $location.path('events').replace();
     };
@@ -96,6 +98,20 @@ function NavigationController($rootScope, $scope, $location, OAuth, Config) {
         scanQRCode(function (data) {
             console.log("SCANNING");
             console.log("SERVER="+JSON.stringify($scope.server));
+
+            // If there is no SERVER selected, get the first in getServers
+            if ($scope.server == undefined) {
+                console.log("QUI");
+                var servers = OAuth.getServers();
+                if (!angular.equals(servers, {})) {
+                    console.log("QUO="+servers);
+                    $scope.server = servers[Object.keys(servers)[0]];
+                }
+                else {
+                    alert("No server selected. Please Scan server QRcode.")
+                }
+            }
+
             // removed the check for an existing event (UNOG Security use case)
             $location.path('registrant').search({"registrant_id": data.r,
                                                  "event_id": data.e,
@@ -282,12 +298,13 @@ function RegistrantController($scope, $location, OAuth, Config) {
     
     var resetPrinter = false;
     $scope.confOfficerUI=Config.isConfOfficerUI();
-    
+
+    $scope.registrant = false;
     OAuth.getRegistrant(data.server_id, data.event_id, data.registrant_id, function (registrant) {
         console.log("REGISTRANT RETRIVED="+JSON.stringify(registrant));
         if ((registrant === undefined) || (registrant=="")) {
-            showAlert('Error', "The registrant cannot be found or it's not approved for the session", function () {});
-            $location.path('events');
+            showAlert('Not found', "Registrant not found or not approved for the session", function () {});
+            //$location.path('events').replace();
         } else {
             var evt = OAuth.getEvent(data.server_id, data.event_id)
             if (evt.hasOwnProperty("session_id")) {

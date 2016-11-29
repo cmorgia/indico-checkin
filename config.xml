@@ -41,5 +41,13 @@
     <platform name="ios">
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
+        <config-file platform="ios" target="*-Info.plist" parent="NSAppTransportSecurity">
+            <dict>
+                <key>NSAllowsArbitraryLoads</key><true/>
+            </dict>
+        </config-file>
+
     </platform>
+
+
 </widget>

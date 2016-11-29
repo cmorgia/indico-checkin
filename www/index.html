@@ -4,24 +4,31 @@
         <meta charset="utf-8" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <meta http-equiv="Content-Security-Policy" content="default-src *; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'; img-src * data: 'unsafe-inline'; connect-src * 'unsafe-inline'; frame-src *;">
+
+
         <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+
         <link rel="stylesheet" type="text/css" href="css/on-off-switch.css" />
         <link rel="stylesheet" type="text/css" href="css/index.css" />
         <title>Check in</title>
     </head>
     <body ng-controller="NavigationController">
         <header class="navbar-fixed-top checkin-nav" >
-            <a ng-hide="isCurrentLocation('/')" ng-click="back()">
+            <!--
+            <a ng-hide="isCurrentLocation('/')" ng-click="back()" style="float: left; margin-top: 6px;">
                 <span class="glyphicon glyphicon-chevron-left"></span>
             </a>
+            -->
 
-            <a ng-show="isCurrentLocation('/')" ng-click="exitFromApp()">
+            <a ng-show="isCurrentLocation('/') && platform == 'android'" ng-click="exitFromApp()" style="float: left; margin-top: 6px;">
                 <span class="glyphicon glyphicon-remove"></span>
             </a>
 
 
 
             <span class="title centered" style="margin-top: 6px;">{{title}}</span>
+
             <a onclick="window.location.reload();" style="float: right; margin-top: 6px;">
                 <span class="glyphicon glyphicon-refresh"></span>
             </a>
@@ -35,10 +42,12 @@
                     <span class="glyphicon glyphicon-qrcode"></span>
                     Add server
                 </a>
+                <!--
                 <a ng-click="fetchTodaysEvents()" ng-hide="server==undefined">
                     <span class="glyphicon glyphicon-refresh"></span>
                     Refresh
                 </a>
+                -->
                 <a ng-click="allEvents()">
                     <span class="glyphicon glyphicon-list"></span>
                     All events
