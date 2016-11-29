@@ -101,14 +101,12 @@ function NavigationController($rootScope, $scope, $location, OAuth, Config) {
 
             // If there is no SERVER selected, get the first in getServers
             if ($scope.server == undefined) {
-                console.log("QUI");
                 var servers = OAuth.getServers();
                 if (!angular.equals(servers, {})) {
-                    console.log("QUO="+servers);
                     $scope.server = servers[Object.keys(servers)[0]];
                 }
                 else {
-                    alert("No server selected. Please Scan server QRcode.")
+                    return alert("No server selected. Please Scan server QRcode.")
                 }
             }
             // removed the check for an existing event (UNOG Security use case)
