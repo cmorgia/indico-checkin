@@ -377,8 +377,9 @@ module.service('OAuth',['Config', function (Config) {
     function getRegistrant(server_id, event_id, registrant_id, callback) {
         var event = getEvent(server_id,event_id);
         console.log("---FOUND EVENT:"+JSON.stringify(event));
-        if (event==undefined) {
-            callback(undefined);
+        console.log("IS EVENT UNDEFINED?" + (typeof event === "undefined"))
+        if (typeof event === "undefined") {
+            return callback(undefined);
         }
         var postfix = '/registrant/';
         if (event.hasOwnProperty('session_id')) {
@@ -390,11 +391,11 @@ module.service('OAuth',['Config', function (Config) {
                       postfix + registrant_id + '.json',
             function (data) {
                 console.log("REGISTRANT RESULTS="+JSON.stringify(data.results))
-                callback(data.results);
+                return callback(data.results);
             },
             function (data) {
                 // Registrant not found
-                callback(undefined);
+                return callback(undefined);
 
                 /*
                 checkOAuthError(data, function () {

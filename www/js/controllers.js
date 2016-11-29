@@ -111,9 +111,8 @@ function NavigationController($rootScope, $scope, $location, OAuth, Config) {
                     alert("No server selected. Please Scan server QRcode.")
                 }
             }
-
             // removed the check for an existing event (UNOG Security use case)
-            $location.path('registrant').search({"registrant_id": data.r,
+            $location.path('/registrant').search({"registrant_id": data.r,
                                                  "event_id": data.e,
                                                  "server_id": $scope.server.baseUrl.hashCode(),
                                                  "ts": Math.random()
@@ -294,12 +293,16 @@ function RegistrantsController($routeParams, $scope, $location, OAuth) {
 
 function RegistrantController($scope, $location, OAuth, Config) {
 
+    $scope.registrantFound = false;
     var data = $location.search();
     
     var resetPrinter = false;
     $scope.confOfficerUI=Config.isConfOfficerUI();
 
-    $scope.registrant = false;
+    // init registrant
+    //$scope.registrant = {full_name:"",personal_data:{picture:"", email:"",passportOrigin:"",passportId:"",passportExpire:""},canEnter:false,checked_in:false};
+
+
     OAuth.getRegistrant(data.server_id, data.event_id, data.registrant_id, function (registrant) {
         console.log("REGISTRANT RETRIVED="+JSON.stringify(registrant));
         if ((registrant === undefined) || (registrant=="")) {
@@ -308,13 +311,15 @@ function RegistrantController($scope, $location, OAuth, Config) {
         } else {
             var evt = OAuth.getEvent(data.server_id, data.event_id)
             if (evt.hasOwnProperty("session_id")) {
-                $scope.confOfficerUI = true
+                $scope.confOfficerUI = true;
             }
             registrant.personal_data.picture = registrant.personal_data.picture+"?ts="+ new Date().getTime();
             $scope.registrant = registrant;
             data.checkin_secret = registrant.checkin_secret;
+            $scope.registrantFound = true;
+            $scope.$apply();
         }
-        $scope.$apply();
+        //$scope.$apply();
     });
 
     $scope.checkin_registrant = function($event) {
