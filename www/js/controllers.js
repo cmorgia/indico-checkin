@@ -301,6 +301,11 @@ function RegistrantController($scope, $location, OAuth, Config) {
     //$scope.registrant = {full_name:"",personal_data:{picture:"", email:"",passportOrigin:"",passportId:"",passportExpire:""},canEnter:false,checked_in:false};
 
 
+    var physicalScreenWidth = window.screen.width * window.devicePixelRatio;
+    var physicalScreenHeight = window.screen.height * window.devicePixelRatio;
+
+    $scope.pictureWidth = window.screen.width/2;
+
     OAuth.getRegistrant(data.server_id, data.event_id, data.registrant_id, function (registrant) {
         console.log("REGISTRANT RETRIVED="+JSON.stringify(registrant));
         if ((registrant === undefined) || (registrant=="")) {
@@ -311,7 +316,10 @@ function RegistrantController($scope, $location, OAuth, Config) {
             if (evt.hasOwnProperty("session_id")) {
                 $scope.confOfficerUI = true;
             }
+            console.log("EVENT="+JSON.stringify(evt));
             registrant.personal_data.picture = registrant.personal_data.picture+"?ts="+ new Date().getTime();
+
+            $scope.event = evt;
             $scope.registrant = registrant;
             data.checkin_secret = registrant.checkin_secret;
             $scope.registrantFound = true;
@@ -322,11 +330,20 @@ function RegistrantController($scope, $location, OAuth, Config) {
 
     $scope.checkin_registrant = function($event) {
         var toggled =  angular.element($event.currentTarget).hasClass("toggled");
-        OAuth.checkIn(data, !toggled, function (result) {
-            $scope.registrant.checkin_date = result.checkin_date;
-            $scope.registrant.checked_in = result.checked_in;
-            $scope.$apply();
-        });
+
+        showConfirm("Toggle Check-in", "Are you sure you want to toggle check-in state?", ["Confirm", "Cancel"],
+            function(buttonIndex) {
+                if(buttonIndex == 1) {
+                    OAuth.checkIn(data, !toggled, function (result) {
+                        $scope.registrant.checkin_date = result.checkin_date;
+                        $scope.registrant.checked_in = result.checked_in;
+                        $scope.$apply();
+                    });
+                }
+            }
+        );
+
+
     };
 
     function cropAndResize(image,options,callback) {

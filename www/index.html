@@ -4,7 +4,9 @@
         <meta charset="utf-8" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-        <meta http-equiv="Content-Security-Policy" content="default-src *; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'; img-src * data: 'unsafe-inline'; connect-src * 'unsafe-inline'; frame-src *;">
+        <meta http-equiv="Content-Security-Policy" content="default-src * gap://ready file: 'self' wss: ws: ; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'; img-src * data: 'unsafe-inline'; connect-src * 'unsafe-inline'; frame-src * gap://ready;">
+
+
 
 
         <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
@@ -73,7 +75,7 @@
         <script type="text/javascript" src="js/lib/angular-touch.js"></script>
         <script type="text/javascript" src="js/lib/ui-bootstrap.js"></script>
         <script type="text/javascript" src="js/lib/url.js"></script>
-        <script type="text/javascript" src="js/lib/anyline.mrz.js"></script>
+        <!--<script type="text/javascript" src="js/lib/anyline.mrz.js"></script>-->
         <script type="text/javascript" src="js/lib/image-manipulation.js"></script>
         <script type="text/javascript" src="js/util.js"></script>
         <script type="text/javascript" src="js/controllers.js"></script>

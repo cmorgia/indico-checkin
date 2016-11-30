@@ -17,7 +17,7 @@
                 <tbody>
                     <tr ng-show="registrantFound && registrant.personal_data.picture">
                         <td>
-                            <img width="225px"  src="{{registrant.personal_data.picture}}" ng-click="takePicture($event)">
+                            <img width="{{ pictureWidth }}px"  src="{{registrant.personal_data.picture}}" ng-click="takePicture($event)">
                         </td>
                         <td>
                             <div style="text-align:center" ng-click="showStatus($event)">
@@ -32,6 +32,10 @@
             </table>
             <div>&nbsp;</div>
             <table class="table table-condensed">
+                    <tr>
+                        <th>Registered to</th>
+                        <td>{{event.title}}</td>
+                    </tr>
                     <tr>
                         <th>Checked in</th>
                         <td>
