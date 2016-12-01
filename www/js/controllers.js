@@ -22,6 +22,7 @@ function NavigationController($rootScope, $scope, $location, OAuth, Config) {
             function (result) {
                 if (!result.cancelled) {
                     // The timeout has to be set for IOS because will not work properly
+                    console.log("ANYLINE SCAN RESULT="+result.value);
                     callback(JSON.parse(result.value));
                 }
             },
@@ -297,14 +298,15 @@ function RegistrantController($scope, $location, OAuth, Config) {
     var resetPrinter = false;
     $scope.confOfficerUI=Config.isConfOfficerUI();
 
-    // init registrant
-    //$scope.registrant = {full_name:"",personal_data:{picture:"", email:"",passportOrigin:"",passportId:"",passportExpire:""},canEnter:false,checked_in:false};
-
-
     var physicalScreenWidth = window.screen.width * window.devicePixelRatio;
     var physicalScreenHeight = window.screen.height * window.devicePixelRatio;
 
     $scope.pictureWidth = window.screen.width/2;
+
+    // Force picture width for FZ-x1 devices
+    if (device.model == "FZ-X1") {
+        $scope.pictureWidth = 200;
+    }
 
     OAuth.getRegistrant(data.server_id, data.event_id, data.registrant_id, function (registrant) {
         console.log("REGISTRANT RETRIVED="+JSON.stringify(registrant));

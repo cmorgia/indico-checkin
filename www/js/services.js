@@ -394,16 +394,12 @@ module.service('OAuth',['Config', function (Config) {
                 return callback(data.results);
             },
             function (data) {
-                // Registrant not found
-                return callback(undefined);
-
-                /*
                 checkOAuthError(data, function () {
                     authenticate(server_id, function () {
-                        getRegistrant(server_id, event_id, registrant_id, callback);
+                        return getRegistrant(server_id, event_id, registrant_id, callback);
                     });
                 });
-                */
+
             }
         );
     }
@@ -541,14 +537,13 @@ module.service('OAuth',['Config', function (Config) {
     }
 
     function checkOAuthError(data, callback) {
-        //console.log(JSON.stringify(data));
-        //var parsedData = JSON.parse(data.text);
-        var parsedData = data;
+        console.log("CHECKOUATHERROR="+JSON.stringify(data));
+        var parsedData = JSON.parse(data.text);
+        //var parsedData = data.text;
         if(parsedData._type == "OAuthError" && parsedData.code == 401) {
             callback();
         } else {
-            //showAlert("Error", parsedData.message, function() {});
-            alert(data.text);
+            showAlert("Error", parsedData.message, function() {});
         }
     }
 
@@ -557,7 +552,7 @@ module.service('OAuth',['Config', function (Config) {
         //parsedData = JSON.parse(data.text);
         //showAlert("Error", parsedData.message, function() {});
         console.log("ERROR:"+JSON.stringify(data));
-        alert(JSON.stringify(data));
+        alert(data.message);
     }
 
     return {
