@@ -1,0 +1,14 @@
+2.2
+---
+
+- Add Session start time info
+
+
+
+2.1
+---
+
+- Fixed compatibility with Android 4.2.2 - FZ-X1 device
+- Fixed compatibility with iOS 10
+- New Cordova project - code refactoring
+

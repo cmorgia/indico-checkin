@@ -36,6 +36,15 @@
                         <th>Registered to</th>
                         <td>{{event.title}}</td>
                     </tr>
+
+                    <tr ng-show="sessions">
+                        <th>Sessions</th>
+                        <td>
+                            <p ng-repeat="session in sessions | orderBy: 'startTime'"><strong>{{session.startTime}}</strong> - {{session.title}}</p>
+                        </td>
+                    </tr>
+
+
                     <tr>
                         <th>Checked in</th>
                         <td>

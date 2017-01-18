@@ -323,6 +323,7 @@ function RegistrantController($scope, $location, OAuth, Config) {
 
             $scope.event = evt;
             $scope.registrant = registrant;
+            $scope.sessions = registrant.sessions;
             data.checkin_secret = registrant.checkin_secret;
             $scope.registrantFound = true;
             $scope.$apply();
