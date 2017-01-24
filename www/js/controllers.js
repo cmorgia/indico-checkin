@@ -438,11 +438,21 @@ function RegistrantController($scope, $location, OAuth, Config) {
     };
 
     $scope.printBadge = function($event) {
+        // REMOTE server printing
         if (!Config.isAirPrintEnabled()) {
             OAuth.remotePrintBadge(data.server_id, data.event_id, data.registrant_id, function (result) {
-                showAlert("",result,function(){});
+                showAlert("",result,function(){
+                    if (result == "Badge printed.") {
+                        $scope.registrant.checked_in = true;
+                        $scope.$apply();
+                    }
+
+
+                });
+                console.log("RESULT FROM PRINTING:" + result);
             });
         } else {
+            // LOCAL air printing
             OAuth.getBadge(data.server_id, data.event_id, data.registrant_id, function (pdf) {
                 window.plugins.PrintPDF.print({
                     type: 'base64',
@@ -450,6 +460,8 @@ function RegistrantController($scope, $location, OAuth, Config) {
                     title: 'Badge',
                     success: function(){
                         console.log('success');
+                        $scope.registrant.checked_in = true;
+                        $scope.$apply();
                     },
                     error: function(data){
                         console.log('failed: ' + data.error);
