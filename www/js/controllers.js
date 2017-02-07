@@ -74,6 +74,16 @@ function NavigationController($rootScope, $scope, $location, OAuth, Config) {
         scanCordova(callback);
     };
 
+    $rootScope.prettyDates = function(startdate, enddate){
+        var sdate = new Date(startdate.replace(/-/g,"/")), locale = "en-us", smonth = sdate.toLocaleString(locale, { month: "short" });
+        var edate = new Date(enddate.replace(/-/g,"/")), locale = "en-us", emonth = edate.toLocaleString(locale, { month: "short" });
+        var ret = sdate.getDate() + ' ' + smonth;
+        if (startdate != enddate) {
+          ret+= ' - ' + edate.getDate() + ' ' + emonth;
+        }
+        return ret;
+    };
+
     $scope.fetchTodaysEvents = function () {
         OAuth.getTodaysEvents($scope.server.baseUrl.hashCode(),function(events) {
             for (var i=0; i<events.length; i++) {
@@ -290,7 +300,7 @@ function RegistrantsController($routeParams, $scope, $location, OAuth) {
     };
 }
 
-function RegistrantController($scope, $location, OAuth, Config) {
+function RegistrantController($scope, $rootScope, $location, OAuth, Config) {
 
     $scope.registrantFound = false;
     var data = $location.search();
@@ -308,28 +318,78 @@ function RegistrantController($scope, $location, OAuth, Config) {
         $scope.pictureWidth = 200;
     }
 
-    OAuth.getRegistrant(data.server_id, data.event_id, data.registrant_id, function (registrant) {
-        console.log("REGISTRANT RETRIVED="+JSON.stringify(registrant));
-        if ((registrant === undefined) || (registrant=="")) {
-            showAlert('Not found', "Registrant not found or not approved for the session", function () {});
-            //$location.path('events').replace();
-        } else {
-            var evt = OAuth.getEvent(data.server_id, data.event_id)
-            if (evt.hasOwnProperty("session_id")) {
-                $scope.confOfficerUI = true;
-            }
-            console.log("EVENT="+JSON.stringify(evt));
-            registrant.personal_data.picture = registrant.personal_data.picture+"?ts="+ new Date().getTime();
 
-            $scope.event = evt;
-            $scope.registrant = registrant;
-            $scope.sessions = registrant.sessions;
-            data.checkin_secret = registrant.checkin_secret;
-            $scope.registrantFound = true;
-            $scope.$apply();
-        }
-        //$scope.$apply();
-    });
+    $scope.getRegistrant = function(data) {
+        OAuth.getRegistrant(data.server_id, data.event_id, data.registrant_id, function (registrant) {
+            console.log("REGISTRANT RETRIVED="+JSON.stringify(registrant));
+            if ((registrant === undefined) || (registrant=="")) {
+                showAlert('Not found', "Registrant not found or not approved for the session", function () {});
+                //$location.path('events').replace();
+            } else {
+                var evt = OAuth.getEvent(data.server_id, data.event_id)
+                if (evt.hasOwnProperty("session_id")) {
+                    $scope.confOfficerUI = true;
+                }
+                console.log("EVENT="+JSON.stringify(evt));
+                registrant.personal_data.picture = registrant.personal_data.picture+"?ts="+ new Date().getTime();
+
+                $scope.event = evt;
+                $scope.childevents = evt.childevents;
+                $scope.parentevent = evt.parentevent;
+                $scope.registrant = registrant;
+                $scope.sessions = registrant.sessions;
+                data.checkin_secret = registrant.checkin_secret;
+                $scope.registrantFound = true;
+                $scope.$apply();
+            }
+            //$scope.$apply();
+        });
+
+    };
+
+
+    // First check if event is downladed. If not, do it!
+    var event = OAuth.getEvent(data.server_id, data.event_id);
+
+    if (typeof event === "undefined") {
+        OAuth.getEventById(data.server_id, data.event_id, function(results) {
+            var event_retrived = results[0];
+            event_retrived.server = $scope.server;
+            event_retrived.event_id = data.event_id;
+
+            // I add the event to today's events ONLY if one child is valid for today
+            var children = [];
+            var child_running = false;
+            for (var key in event_retrived.childLinks) {
+                var child = event_retrived.childLinks[key];
+                var startdate = new Date(child.startDate.date);
+                var enddate = new Date(child.endDate.date);
+                var today = new Date();
+                // Add the MAIN event only if at least 1 child is running TODAY
+                console.log(" child TITLE: " + child.title + " ----- child startdate: "+ startdate);
+
+                if((startdate <= today && enddate >= today)) {
+                    console.log("--------  RUNNING TODAY !!!!! ------");
+                    children.push(child);
+                    child_running = true;
+                }
+            }
+            if (child_running == true) {
+                event_retrived.childLinks = children;
+                OAuth.addEvent(event_retrived, function(){
+                    $scope.getRegistrant(data);
+                })
+            } else {
+                $scope.getRegistrant({});
+            }
+
+        });
+    } else {
+        console.log(" EVENT IS IN TODAY LIST!!!!!! ")
+        $scope.getRegistrant(data);
+    }
+
+
 
     $scope.checkin_registrant = function($event) {
         var toggled =  angular.element($event.currentTarget).hasClass("toggled");

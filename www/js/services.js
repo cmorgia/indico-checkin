@@ -235,7 +235,12 @@ module.service('OAuth',['Config', function (Config) {
     }
 
     function getEvents() {
-        return JSON.parse(localStorage.getItem('events') || "{}");
+        evts = JSON.parse(localStorage.getItem('events') || "{}");
+        //console.log("STORED EVENTS:");
+        //for (var key in evts) {
+        //    console.log("---> " + JSON.stringify(evts[key]));
+        //}
+        return evts
     }
 
 
@@ -290,13 +295,21 @@ module.service('OAuth',['Config', function (Config) {
         var server_id = event.server.baseUrl.hashCode();
         event_to_store.event_id = event.event_id;
         event_to_store.title = event.title;
-        event_to_store.date = event.date;
+        event_to_store.startdate = event.startDate;
+        event_to_store.enddate = event.endDate;
         event_to_store.server_id = server_id;
         if (event.hasOwnProperty('session_id')) {
             event_to_store.session_id = event.session_id;
         }
+
+        // Add parent/child event info
+        event_to_store.childevents = event.childLinks
+        event_to_store.parentevent = event.parentLink
+
         events[getEventKey(server_id, event.event_id)] = event_to_store;
         localStorage.setItem('events', JSON.stringify(events));
+
+        console.log("++++STORED:"+JSON.stringify(event_to_store));
     }
 
     function addEvent(event, callback) {
@@ -397,6 +410,25 @@ module.service('OAuth',['Config', function (Config) {
                 checkOAuthError(data, function () {
                     authenticate(server_id, function () {
                         return getRegistrant(server_id, event_id, registrant_id, callback);
+                    });
+                });
+
+            }
+        );
+    }
+
+
+    function getEventById(server_id, event_id, callback) {
+        getOAuthClient(server_id).getJSON(getServer(server_id).baseUrl +
+                      '/export/event/' + event_id + '.json?detail=mobile&nc=yes',
+            function (data) {
+                console.log("event found="+JSON.stringify(data.results))
+                return callback(data.results);
+            },
+            function (data) {
+                checkOAuthError(data, function () {
+                    authenticate(server_id, function () {
+                        return getEventById(server_id, event_id, callback);
                     });
                 });
 
@@ -563,6 +595,7 @@ module.service('OAuth',['Config', function (Config) {
         deleteEvent: deleteEvent,
         getEvents: getEvents,
         getEvent: getEvent,
+        getEventById: getEventById,
         getRegistrantsForEvent: getRegistrantsForEvent,
         listPrinters: listPrinters,
         getRegistrant: getRegistrant,

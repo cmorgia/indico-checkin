@@ -44,6 +44,17 @@
                         </td>
                     </tr>
 
+                    <tr id="child-events" ng-show="childevents">
+                        <th>Child events</th>
+                        <td>
+                            <p class="child" ng-repeat="child in childevents | orderBy: 'startDate'">
+                                <span class="title">{{ child.title }} </span> <br/>
+                                <span class="dates"> >> {{ prettyDates(child.startDate.date, child.endDate.date) }} </span>
+                            </p>
+                        </td>
+                    </tr>
+
+
 
                     <tr>
                         <th>Checked in</th>
