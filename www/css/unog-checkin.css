@@ -1,4 +1,6 @@
+
+#child-events { background-color: lightgreen; }
 #child-events .child { padding-bottom: 10px; }
 #child-events .child:first-child { padding-bottom: 0 !important; }
 #child-events .child .title { font-weight: bold; }
-#child-events .child .dates { padding-left: 20px; font-style: italic; color: darkgreen;}
+#child-events .child .dates { padding-left: 10px; font-style: italic; font-weight: bold; color: darkgreen;}

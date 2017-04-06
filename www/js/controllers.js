@@ -84,6 +84,10 @@ function NavigationController($rootScope, $scope, $location, OAuth, Config) {
         return ret;
     };
 
+    $rootScope.prettyTimeString = function(timestring) {
+        return timestring.split(":",2).join(":")
+    };
+
     $scope.fetchTodaysEvents = function () {
         OAuth.getTodaysEvents($scope.server.baseUrl.hashCode(),function(events) {
             for (var i=0; i<events.length; i++) {

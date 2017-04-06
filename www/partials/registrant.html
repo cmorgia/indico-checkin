@@ -31,11 +31,29 @@
                 </tbody>
             </table>
             <div>&nbsp;</div>
+
+
+
             <table class="table table-condensed">
                     <tr>
-                        <th>Registered to</th>
-                        <td>{{event.title}}</td>
+                        <th colspan="2">{{event.title}}</th>
                     </tr>
+                    <tr>
+                        <td>
+                             {{ prettyDates(event.startdate.date, event.enddate.date) }}
+                        </td>
+                        <td>
+                            <span class="glyphicon glyphicon-time"> {{ prettyTimeString(event.startdate.time) }}</span>
+                        </td>
+                    </tr>
+            </table>
+
+
+
+
+
+            <table class="table table-condensed">
+
 
                     <tr ng-show="sessions">
                         <th>Sessions</th>
@@ -45,11 +63,12 @@
                     </tr>
 
                     <tr id="child-events" ng-show="childevents">
-                        <th>Child events</th>
+                        <th>Linked events</th>
                         <td>
                             <p class="child" ng-repeat="child in childevents | orderBy: 'startDate'">
                                 <span class="title">{{ child.title }} </span> <br/>
-                                <span class="dates"> >> {{ prettyDates(child.startDate.date, child.endDate.date) }} </span>
+                                <span class="dates"> {{ prettyDates(child.startDate.date, child.endDate.date) }} </span>
+                                <span class="glyphicon glyphicon-time" style="margin-left:5px;"> {{ prettyTimeString(child.startDate.time) }}</span>
                             </p>
                         </td>
                     </tr>
